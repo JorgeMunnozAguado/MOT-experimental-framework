@@ -258,6 +258,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='SORT demo')
     parser.add_argument('--display', dest='display', help='Display online tracker output (slow) [False]',action='store_true')
     parser.add_argument("--seq_path", help="Path to data folder.", type=str, default='data')
+    parser.add_argument("--detector", help="Detector used.", type=str, default='faster-rcnn')
     parser.add_argument("--phase", help="Subdirectory in seq_path.", type=str, default='MOT20')
     parser.add_argument("--max_age", 
                         help="Maximum number of frames to keep alive a track without associated detections.", 
@@ -268,6 +269,26 @@ def parse_args():
     parser.add_argument("--iou_threshold", help="Minimum IOU for match.", type=float, default=0.3)
     args = parser.parse_args()
     return args
+
+
+def check_path(actual, new, clean=False):
+
+    path = os.path.join(actual, new)
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    elif os.path.exists(path) and clean:
+        shutil.rmtree(path)
+        os.makedirs(path)
+
+
+    return path
+
+
+
+
+
 
 if __name__ == '__main__':
   # all train
@@ -285,21 +306,12 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax1 = fig.add_subplot(111, aspect='equal')
 
-  if not os.path.exists('data/output'):
-    os.makedirs('data/output')
+  path = check_path('data/', 'output/')
+  path = check_path(path, 'sort/')
+  path = check_path(path, args.detector)
+  path = check_path(path, phase)
 
-  if not os.path.exists('data/output/sort'):
-    os.makedirs('data/output/sort')
-    os.makedirs(os.path.join('data/output/sort', phase))
-
-  else:
-    dir = 'data/output/sort'
-    shutil.rmtree(dir)
-    os.makedirs('data/output/sort')
-    os.makedirs(os.path.join('data/output/sort', phase))
-
-
-  pattern = os.path.join(args.seq_path, phase, '*', 'det', 'det.txt')
+  pattern = os.path.join(args.seq_path, args.detector, phase, '*', 'det', 'det.txt')
 
   for seq_dets_fn in glob.glob(pattern):
     mot_tracker = Sort(max_age=args.max_age, 
@@ -308,7 +320,7 @@ if __name__ == '__main__':
     seq_dets = np.loadtxt(seq_dets_fn, delimiter=',')
     seq = seq_dets_fn[pattern.find('*'):].split(os.path.sep)[0]
     
-    with open(os.path.join('data/output/sort', phase, '%s.txt'%(seq)),'w') as out_file:
+    with open(os.path.join(path, '%s.txt'%(seq)),'w') as out_file:
       print("Processing %s."%(seq))
       for frame in range(int(seq_dets[:,0].max())):
         frame += 1 #detection and frame numbers begin at 1

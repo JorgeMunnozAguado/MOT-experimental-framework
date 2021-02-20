@@ -12,5 +12,5 @@ pip install -r requirements.txt
 And run the code:
 
 ```
-python3 tracking/sort/sort.py --seq_path data/detections/faster-rcnn
+python3 tracking/sort/sort.py --seq_path data/detections/ --detector faster-rcnn
 ```
