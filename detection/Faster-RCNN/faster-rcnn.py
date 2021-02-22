@@ -20,6 +20,9 @@ parser.add_argument("--batch", help="Size of the batch.", default='10', type=int
 args = parser.parse_args()
 
 
+# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+
 def evalSet(dataloader, model, batch_size):
 
 

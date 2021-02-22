@@ -1,3 +1,4 @@
 *
 !.gitignore
 !download_data.sh
+!MOT_structure.py
