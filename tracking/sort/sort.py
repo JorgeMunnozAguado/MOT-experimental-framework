@@ -306,7 +306,7 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax1 = fig.add_subplot(111, aspect='equal')
 
-  path = check_path('data/', 'output/')
+  path = check_path('data/', 'predictions/')
   path = check_path(path, 'sort/')
   path = check_path(path, args.detector)
   path = check_path(path, phase)

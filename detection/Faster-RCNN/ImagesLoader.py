@@ -1,5 +1,6 @@
 
 import os
+import numpy as np
 from torchvision import datasets
 
 
@@ -59,7 +60,8 @@ class DatasetLoader:
 
         file = os.path.join(file, 'det.txt')
 
-        # print(file)
+        
+        boxes = DatasetLoader.processBoxes(boxes)
 
         with open(file, 'a') as fp:
 
@@ -75,10 +77,15 @@ class DatasetLoader:
 
 
 
+    @staticmethod
+    def processBoxes(boxes):
 
-# dataloader = DatasetLoader(path='data/')
-# sets = dataloader.loadData('as')
+        boxes = boxes.detach().numpy()
+        # x1, y1, x2, y2 --> x1, y1, width, height
+        boxes = np.stack((boxes[:, 0],
+                          boxes[:, 1],
+                          boxes[:, 2] - boxes[:, 0],
+                          boxes[:, 3] - boxes[:, 1]),
+                          axis=1)
 
-# print(sets.classes)
-# print(sets.samples)
-
+        return boxes

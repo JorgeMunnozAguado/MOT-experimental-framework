@@ -36,8 +36,6 @@ def evalSet(dataloader, model, batch_size):
 
             i_frame = (i_batch * batch_size) + i + 1
 
-            print(i_frame, i_batch, i)
-
             loader.saveResult(setName, i_frame, frame['boxes'], frame['scores'], frame['labels'])
 
 
