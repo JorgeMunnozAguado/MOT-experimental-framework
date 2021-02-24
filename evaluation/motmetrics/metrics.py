@@ -25,6 +25,8 @@ from motmetrics import math_util
 from motmetrics.lap import linear_sum_assignment
 from motmetrics.mot import MOTAccumulator
 
+from hota import hota
+
 try:
     _getargspec = inspect.getfullargspec
 except AttributeError:
@@ -513,13 +515,6 @@ def motp_m(partials, num_detections):
 
 
 def mota(df, num_misses, num_switches, num_false_positives, num_objects):
-    """Multiple object tracker accuracy."""
-    del df  # unused
-    return 1. - math_util.quiet_divide(
-        num_misses + num_switches + num_false_positives,
-        num_objects)
-
-def hota(df, num_misses, num_switches, num_false_positives, num_objects):
     """Multiple object tracker accuracy."""
     del df  # unused
     return 1. - math_util.quiet_divide(

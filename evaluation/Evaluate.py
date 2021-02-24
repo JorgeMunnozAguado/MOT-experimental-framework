@@ -7,6 +7,9 @@ import motmetrics as mm
 
 
 def readFile(path):
+    '''Read a GT or predictions file in the indicated
+    path. Return a dict were the keys are frames.
+    '''
 
     file = np.loadtxt(path, delimiter=',')
 
@@ -27,12 +30,16 @@ def readFile(path):
 
 
 def extractFromFrame(frame, process=False):
+    '''Extract important data from frame. Like the
+    ids or bounding boxes. If necessary BBoxes could
+    be processed to have a (x1, y1, w, h) disposition.
+    '''
 
     ids = frame[:, 0]
     boxes = frame[:, 1:5]
 
 
-    # Ground Truth is already processed
+    # Process bounding boxes for corret format (if necessary)
     if process:
 
         boxes = np.stack(boxes, axis=0)
@@ -47,6 +54,8 @@ def extractFromFrame(frame, process=False):
 
 
 def updateMetric(acc, gt_id, out_id, distance):
+    '''Update the metrics of a sequence by one frame.
+    '''
 
     acc.update(
         gt_id,      # Ground truth objects in this frame
@@ -56,6 +65,9 @@ def updateMetric(acc, gt_id, out_id, distance):
 
 
 def evaluate_mot_accums(accums, names, generate_overall=True):
+    '''Calculates and generates the result of the metrics
+    for mot challenge for a group of sequences.
+    '''
 
     mh = mm.metrics.create()
 
@@ -76,6 +88,10 @@ def evaluate_mot_accums(accums, names, generate_overall=True):
 
 
 def evaluateData(tracker, detector, db, data):
+    '''Evaluate the tracker / detector for specific file.
+    Load the predictions and ground truth and call other
+    functions.
+    '''
 
     acc = mm.MOTAccumulator(auto_id=True)
 
@@ -103,6 +119,8 @@ def evaluateData(tracker, detector, db, data):
 
 
 def listFiles(*args, path='data/predictions'):
+    '''List files from specif path.
+    '''
 
     path = os.path.join(path, *args)
 
