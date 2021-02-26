@@ -267,6 +267,8 @@ def parse_args():
                         help="Minimum number of associated detections before track is initialised.", 
                         type=int, default=3)
     parser.add_argument("--iou_threshold", help="Minimum IOU for match.", type=float, default=0.3)
+    parser.add_argument("--name", help="Add a postfix to 'sort' tracker name.")
+
     args = parser.parse_args()
     return args
 

@@ -95,20 +95,20 @@ def evaluateData(tracker, detector, db, data):
 
     acc = mm.MOTAccumulator(auto_id=True)
 
-    path_out = os.path.join('data/predictions/', tracker, detector, db, data)
-    path_gt  = os.path.join('data/images/', db, data.split('.')[0] + '/gt/gt.txt')
+    path_out = os.path.join('outputs/tracks/', tracker, detector, db, data)
+    path_gt  = os.path.join('dataset/', db, data.split('.')[0] + '/gt/gt.txt')
 
     frame_out = readFile(path_out)
     frame_gt  = readFile(path_gt)
+
+    count = []
 
     for key in frame_out.keys():
 
         out_id, out_box = extractFromFrame(frame_out[key])
         gt_id,  gt_box  = extractFromFrame(frame_gt[key])
 
-
         distance = mm.distances.iou_matrix(gt_box, out_box, max_iou=0.5)
-
 
         updateMetric(acc, gt_id, out_id, distance)
 
@@ -118,7 +118,7 @@ def evaluateData(tracker, detector, db, data):
 
 
 
-def listFiles(*args, path='data/predictions'):
+def listFiles(*args, path='outputs/tracks/'):
     '''List files from specif path.
     '''
 

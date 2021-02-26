@@ -1,1 +1,10 @@
+
+# Ignore Python cache
 **/__pycache__/
+
+# Ignore content in folders.
+dataset/*
+outputs/
+
+# Not ignore specific files.
+!datasets/MOT_structure.py

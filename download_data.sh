@@ -1,8 +1,8 @@
 #!/bin/sh
 
-mkdir detections images predictions output
+mkdir outputs
 
-cd images
+cd dataset
 wget https://motchallenge.net/data/MOT20.zip
 unzip MOT20.zip
 rm MOT20.zip
@@ -12,7 +12,7 @@ rm -r test
 rmdir train
 cd ../..
 
-mkdir detections/default
-mkdir detections/default/MOT20
+mkdir outputs/public
+mkdir outputs/public/MOT20
 
-python MOT_structure.py
+python dataset/MOT_structure.py
