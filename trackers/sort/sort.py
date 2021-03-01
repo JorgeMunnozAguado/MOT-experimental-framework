@@ -257,7 +257,7 @@ def parse_args():
     """Parse input arguments."""
     parser = argparse.ArgumentParser(description='SORT demo')
     parser.add_argument('--display', dest='display', help='Display online tracker output (slow) [False]',action='store_true')
-    parser.add_argument("--seq_path", help="Path to data folder.", type=str, default='data')
+    parser.add_argument("--seq_path", help="Path to data folder.", type=str, default='outputs/detections')
     parser.add_argument("--detector", help="Detector used.", type=str, default='faster-rcnn')
     parser.add_argument("--phase", help="Subdirectory in seq_path.", type=str, default='MOT20')
     parser.add_argument("--max_age", 
@@ -308,12 +308,22 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax1 = fig.add_subplot(111, aspect='equal')
 
-  path = check_path('data/', 'predictions/')
-  path = check_path(path, 'sort/')
+
+  # Name of tracker
+  name = 'sort'
+  if args.name:   name = name + '-' + args.name
+
+
+  path = check_path('outputs/', 'detections/')
+  path = check_path(path, name)
   path = check_path(path, args.detector)
   path = check_path(path, phase)
 
+  print(path)
+
   pattern = os.path.join(args.seq_path, args.detector, phase, '*', 'det', 'det.txt')
+
+  print(pattern)
 
   for seq_dets_fn in glob.glob(pattern):
     mot_tracker = Sort(max_age=args.max_age, 
