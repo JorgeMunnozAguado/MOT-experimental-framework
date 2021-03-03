@@ -6,5 +6,8 @@
 dataset/*
 outputs/
 
+# Ignore network weights
+*.weights
+
 # Not ignore specific files.
 !datasets/MOT_structure.py

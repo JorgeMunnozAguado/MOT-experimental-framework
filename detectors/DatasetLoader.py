@@ -5,34 +5,40 @@ from torchvision import datasets
 
 
 IMAGES = 'img1'
-TEST_NAME  = 'test'
-TRAIN_NAME = 'train'
-
 
 class DatasetLoader:
 
-    def __init__(self, path='data/images', mot='MOT20', savePath='data/detections', detectorName='faster-rcnn'):
+    def __init__(self, detectorName, path='data/images', set_data='MOT20', savePath='outputs/detections'):
+        '''Create a 
+        '''
 
-        self.path = os.path.join(path, mot)
-        self.setName = mot
+        self.path = os.path.join(path, set_data)
+        self.setName = set_data
 
         self.savePath = savePath
         self.detectorName = detectorName
 
+        self.results = []
+
+
+        # Create path where to save detections
         if not os.path.exists(savePath):
             os.makedirs(savePath)
 
         if not os.path.exists(os.path.join(savePath, detectorName)):
             os.makedirs(os.path.join(savePath, detectorName))
 
-        if not os.path.exists(os.path.join(savePath, detectorName, mot)):
-            os.makedirs(os.path.join(savePath, detectorName, mot))
+        if not os.path.exists(os.path.join(savePath, detectorName, set_data)):
+            os.makedirs(os.path.join(savePath, detectorName, set_data))
 
 
 
     def listData(self):
 
-        return os.listdir(self.path)
+        list_d = os.listdir(self.path)
+        list_d.sort()
+
+        return list_d
 
 
 
@@ -45,8 +51,28 @@ class DatasetLoader:
         return self.sets
 
 
+    def update(self, frame, boxes, scores, labels, label_permited=[1]):
 
-    def saveResult(self, setName, frame, boxes, scores, labels, label_permited=[1]):
+        # Process bounding boxes
+        boxes = DatasetLoader.processBoxes(boxes)
+
+        # Save permited boxes in variable.
+        for b, s, l in zip(boxes, scores, labels):
+
+            if not l in label_permited: continue
+
+            b = [int(a.item()) for a in b]
+
+            # Set format and save in variable
+            # detection = [frame] + [-1] + b + [s.item()] + [-1, -1, -1]
+            detection = [frame] + b + [s.item()]
+            self.results.append(detection)
+
+
+
+
+
+    def save(self, setName):
 
         file = os.path.join(self.savePath, self.detectorName, self.setName, setName)
 
@@ -60,20 +86,9 @@ class DatasetLoader:
 
         file = os.path.join(file, 'det.txt')
 
-        
-        boxes = DatasetLoader.processBoxes(boxes)
+        np.savetxt(file, self.results, delimiter=',', fmt=['%d,-1', '%d', '%d', '%d', '%d', '%.4f,-1,-1,-1'])
 
-        with open(file, 'a') as fp:
-
-            for b, s, l in zip(boxes, scores, labels):
-
-                if not l in label_permited: continue
-
-                # print(b.tolist())
-                b = [str(int(a.item())) for a in b]
-                # print(','.join(b.tolist()))
-
-                fp.write(str(frame) + ',-1' + ',' + ','.join(b) + ',' + str(s.item()) + ',-1' + ',-1' + ',-1\n')
+        self.results = []
 
 
 
