@@ -1,8 +1,5 @@
 #!/bin/sh
 
-mkdir outputs
-
-cd dataset
 wget https://motchallenge.net/data/MOT20.zip
 unzip MOT20.zip
 rm MOT20.zip

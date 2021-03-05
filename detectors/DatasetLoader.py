@@ -51,21 +51,20 @@ class DatasetLoader:
         return self.sets
 
 
-    def update(self, frame, boxes, scores, labels, label_permited=[1]):
+    def update(self, frame, boxes, scores, labels, label_permited=[1], preprocess=True):
 
         # Process bounding boxes
-        boxes = DatasetLoader.processBoxes(boxes)
+        if preprocess:
+            boxes = DatasetLoader.processBoxes(boxes)
 
         # Save permited boxes in variable.
         for b, s, l in zip(boxes, scores, labels):
 
             if not l in label_permited: continue
 
-            b = [int(a.item()) for a in b]
-
             # Set format and save in variable
             # detection = [frame] + [-1] + b + [s.item()] + [-1, -1, -1]
-            detection = [frame] + b + [s.item()]
+            detection = [frame] + list(b) + [s]
             self.results.append(detection)
 
 
@@ -86,7 +85,7 @@ class DatasetLoader:
 
         file = os.path.join(file, 'det.txt')
 
-        np.savetxt(file, self.results, delimiter=',', fmt=['%d,-1', '%d', '%d', '%d', '%d', '%.4f,-1,-1,-1'])
+        np.savetxt(file, self.results, delimiter=',', fmt=['%d,-1', '%.0f', '%.0f', '%.0f', '%.0f', '%.4f,-1,-1,-1'])
 
         self.results = []
 
@@ -95,7 +94,6 @@ class DatasetLoader:
     @staticmethod
     def processBoxes(boxes):
 
-        boxes = boxes.detach().numpy()
         # x1, y1, x2, y2 --> x1, y1, width, height
         boxes = np.stack((boxes[:, 0],
                           boxes[:, 1],

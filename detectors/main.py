@@ -62,7 +62,7 @@ def eval_sets(detector, loader, batch, device):
         dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=False, num_workers=1)
 
         # evalSet(dataloader, model, args.batch, device)
-        detector.eval_set(dataloader, loader, batch, device)
+        detector.eval_set(dataloader, loader, device)
 
         # Save the results
         loader.save(setName)
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     # Import the selected detector.
     module = importlib.import_module(args.detector)
     class_ = getattr(module, args.detector)
-    detector = class_()                              # Create detector object
+    detector = class_(args.batch)                              # Create detector object
 
 
     # Set up the dataset.

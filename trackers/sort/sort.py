@@ -319,11 +319,7 @@ if __name__ == '__main__':
   path = check_path(path, args.detector)
   path = check_path(path, phase)
 
-  print(path)
-
   pattern = os.path.join(args.seq_path, args.detector, phase, '*', 'det', 'det.txt')
-
-  print(pattern)
 
   for seq_dets_fn in glob.glob(pattern):
     mot_tracker = Sort(max_age=args.max_age, 

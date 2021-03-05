@@ -10,4 +10,5 @@ outputs/
 *.weights
 
 # Not ignore specific files.
-!datasets/MOT_structure.py
+!dataset/MOT_structure.py
+!dataset/download_data.sh

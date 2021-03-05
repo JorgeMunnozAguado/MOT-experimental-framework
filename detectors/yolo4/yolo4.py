@@ -1,93 +1,103 @@
-import argparse
 import os
-import glob
-import random
-import darknet
-import time
 import cv2
-import numpy as np
+import glob
+import time
 import darknet
+import argparse
+import numpy as np
+import random
 
 from Detector import Detector
 
 
-import os
 
 PATH = 'detectors/yolo4/'
 
 
 class yolo4(Detector):
 
-    def __init__(self):
+    def __init__(self, batch_size):
 
-        super().__init__('yolo4')
+        super().__init__('yolo4', batch_size)
 
         CONFIG_FILE = PATH + 'cfg/yolov4.cfg'
         DATA_FILE   = PATH + 'cfg/coco.data'
         WEIGHTS     = PATH + 'yolov4.weights'
 
         # Load model (pretrained)
-        network, class_names, _ = darknet.load_network(
+        network, class_names, class_colors = darknet.load_network(
             CONFIG_FILE,
             DATA_FILE,
-            WEIGHTS#,
-            #batch_size=args.batch_size
+            WEIGHTS,
+            batch_size=self.batch_size
         )
 
         self.model = network
         self.class_names = class_names
+        self.class_colors = class_colors
+
+
+        self.thresh = 0.25
+        self.label_permited = ['person']
 
 
 
-    def eval_set(self, dataloader, loader, batch_size, device, verbose=0):
+    def eval_set(self, dataloader, loader, device, verbose=0):
         '''Run evaluation over loaded data.
         '''
 
         for i_batch, (images, y) in enumerate(dataloader):
 
-            print(images.shape)
-
-        #     images = images.to(device)
-        #     output = self.model(images)
-
-        #     if verbose: print('Frame:', i_batch * batch_size)
-
-        #     for i, frame in enumerate(output):
-
-        #         i_frame = (i_batch * batch_size) + i + 1
-
-        #         loader.update(i_frame, frame['boxes'], frame['scores'], frame['labels'])
+            images = images.numpy()
 
 
+            for i, image in enumerate(images):
+
+                i_frame = (i_batch * self.batch_size) + i + 1
 
 
+                # Detect objects
+                detections = self.detect_image(image)
+
+                # Preprocess output (detections)
+                labels, scores, bboxes = yolo4.process_output(detections)
+
+                loader.update(i_frame, bboxes, scores, labels, label_permited=self.label_permited, preprocess=False)
 
 
-
-def image_detection(image_path, network, class_names, thresh):
-    # Darknet doesn't accept numpy images.
-    # Create one with image we reuse for each detect
+            break
 
 
 
-    # width = darknet.network_width(network)
-    # height = darknet.network_height(network)
-    # darknet_image = darknet.make_image(width, height, 3)
+    def detect_image(self, image):
 
-    # image = cv2.imread(image_path)
-    # image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    # image_resized = cv2.resize(image_rgb, (width, height),
-    #                            interpolation=cv2.INTER_LINEAR)
-    # darknet.copy_image_from_bytes(darknet_image, image_resized.tobytes())
+        image = (image.transpose(1, 2, 0) * 255).astype(np.uint8)
+
+        width = darknet.network_width(self.model)
+        height = darknet.network_height(self.model)
+        darknet_image = darknet.make_image(width, height, 3)
+
+        image_resized = cv2.resize(image, (width, height), interpolation=cv2.INTER_LINEAR)
+        darknet.copy_image_from_bytes(darknet_image, image_resized.tobytes())
+
+        detections = darknet.detect_image(self.model, self.class_names, darknet_image, thresh=self.thresh)
+
+        darknet.free_image(darknet_image)
+
+        return detections
 
 
-    detections = darknet.detect_image(network, class_names, darknet_image, thresh=thresh)
-    return detections
+    @staticmethod
+    def process_output(detections):
+
+        detections = np.asarray(detections, dtype=object)
+
+        labels = detections[:, 0]
+        scores = detections[:, 1]
+        bboxes = detections[:, 2]
+
+        scores = scores.astype(np.float)
+        bboxes = [list(b) for b in bboxes]
 
 
-
-
-
-
-# detections = image_detection(image_name, network, class_names, args.thresh)
-# print(detections)
+        return labels, scores, bboxes
