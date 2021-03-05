@@ -7,27 +7,37 @@ The repository is divided in folders:
 
 - **dataset** : Datasets used for Multi Object Tracking are saved in this folder.
 - _outputs_ : Outputs of detectors and trackers will be save in this folder.
-- **detectors** : There are multiple detector algorithms.
+- **detectors** : Folder were there are the detection models.
 - **trackers** : Tracking algorithms are stored here.
 - **evaluation** : Contains an evaluation script with multiple metrics.
 
-In the following sections we will explore how are organized this folders. And how to run experiments.
+In the following sections we will explore how are organized this folders and how to run experiments.
 
+To setup the environment run `setup.sh`. It is recomended to configure the flags in order to get the best performance.
 
 ## Detection models
 
 You can find detection models in the folder `detectors`. Each model has its own folder. If you want some tips of how implement a new detector read the `README.md` file in that folder.
 
-| Detector Name | Code | Publication Year | Publication |
-| ------------- |:----:|:----------------:|:-----------:|
-| Faster-RCNN   |      |                  |             |
+| Detector Name | Code                                | Publication Year | Publication                      |
+| ------------- |:-----------------------------------:|:----------------:|:--------------------------------:|
+| Faster-RCNN   | https://pytorch.org/                | 2016             | https://arxiv.org/abs/1506.01497 |
+| Yolo V4       | https://github.com/AlexeyAB/darknet | 2020             | https://arxiv.org/abs/2004.10934 |
+| Yolo V3       | https://github.com/AlexeyAB/darknet | 2018             | https://arxiv.org/abs/1804.02767 |
+
+These detectors are encapsulated in one script file call `detectors/main.py`. To run the experiments it is necessary to select the detector you want to test. The script also have some parameters to explore. See more running `python detectors/main.py -h`.
+
+Example of running Faster-RCNN.
+```
+python detectors/main.py --detector faster_rcnn
+```
 
 
 ## Tracking models
 
-| Tracker Name  | Code | Publication Year | Publication |
-| ------------- |:----:|:----------------:|:-----------:|
-| Sort          |      |                  |             |
+| Tracker Name  | Code                                | Publication Year | Publication                      |
+| ------------- |:-----------------------------------:|:----------------:|:--------------------------------:|
+| Sort          | https://github.com/abewley/sort     | 2017             | https://arxiv.org/abs/1602.00763 |
 
 
 ## Dataset
@@ -59,7 +69,7 @@ dataset/
 
 ### Outputs distribution
 
-Folder must contain the
+In the `output` directory you can find the results of the detectors and tracker models.
 
 ```
 outputs/
@@ -90,9 +100,6 @@ Evaluation module was based on [mot-metrics](https://github.com/cheind/py-motmet
 
 We also add HOTA metric to prove performance.
 
-To install the enviroment is needed to run the following command:
-```
-```
 
 To perform the evaluation run:
 ```
