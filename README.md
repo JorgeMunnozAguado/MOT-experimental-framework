@@ -21,9 +21,13 @@ You can find detection models in the folder `detectors`. Each model has its own 
 
 | Detector Name | Code                                | Publication Year | Publication                      |
 | ------------- |:-----------------------------------:|:----------------:|:--------------------------------:|
-| Faster-RCNN   | https://pytorch.org/                | 2016             | https://arxiv.org/abs/1506.01497 |
+| Faster-RCNN   | [https://pytorch.org/](https://pytorch.org/vision/0.8/models.html#faster-r-cnn) | 2016             | https://arxiv.org/abs/1506.01497 |
 | Yolo V4       | https://github.com/AlexeyAB/darknet | 2020             | https://arxiv.org/abs/2004.10934 |
 | Yolo V3       | https://github.com/AlexeyAB/darknet | 2018             | https://arxiv.org/abs/1804.02767 |
+| RetinaNet     | [https://pytorch.org/](https://pytorch.org/vision/0.8/models.html#retinanet) | 2018             | https://arxiv.org/abs/1708.02002 |
+| Mask R-CNN    | [https://pytorch.org/](https://pytorch.org/vision/0.8/models.html#mask-r-cnn) | 2018             | https://arxiv.org/abs/1703.06870 |
+| Keypoint R-CNN | [https://pytorch.org/](https://pytorch.org/vision/0.8/models.html#keypoint-r-cnn) |              |  |
+| EfficientDet  | https://github.com/google/automl    | 2020             | https://arxiv.org/abs/1911.09070 |
 
 These detectors are encapsulated in one script file call `detectors/main.py`. To run the experiments it is necessary to select the detector you want to test. The script also have some parameters to explore. See more running `python detectors/main.py -h`.
 
