@@ -14,14 +14,14 @@ def parseInput(list_detectors):
     '''Parse input of the script.
     '''
 
-    parser = argparse.ArgumentParser(description='Faster-RCNN demo')
+    parser = argparse.ArgumentParser(description='Detectors demo')
 
     # Select an able detector from list.
     parser.add_argument("--detector", help="Name of the detector to use.", choices=list_detectors, required=True)
 
     # Important arguments, but optional.
     parser.add_argument("--batch", help="Size of the batch.", default='5', type=int)
-    parser.add_argument("--name", help="Add a postfix to 'faster-rcnn' detector name.")
+    parser.add_argument("--name", help="Add a postfix to the detector name.")
 
     # Other optional arguments
     parser.add_argument("--path", help="Path were to find the data.", default='dataset')
