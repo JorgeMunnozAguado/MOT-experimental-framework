@@ -4,7 +4,7 @@ import os
 from abc import ABC, abstractmethod
 
 
-class Tracker(ABC):
+class Tracker_abs(ABC):
 
     def __init__(self, name, batch_size):
         
@@ -25,7 +25,7 @@ class Tracker(ABC):
 
 
     @abstractmethod
-    def calculate_tracks(self, aux_path, track_path, verbose=0):
+    def calculate_tracks(self, img_path, aux_path, track_path, verbose=0):
         pass
 
 

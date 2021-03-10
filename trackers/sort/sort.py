@@ -3,12 +3,12 @@ import os
 import glob
 import time
 
-from Tracker import Tracker
+from Tracker import Tracker_abs
 
 from sort.sort_def import *
 
 
-class sort(Tracker):
+class sort(Tracker_abs):
 
     def __init__(self, batch_size):
 
@@ -27,7 +27,7 @@ class sort(Tracker):
         pass
 
 
-    def calculate_tracks(self, aux_path, track_path, verbose=0):
+    def calculate_tracks(self, img_path, aux_path, track_path, verbose=0):
 
         # all train
         total_time = 0.0

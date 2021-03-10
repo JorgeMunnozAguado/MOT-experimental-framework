@@ -1,6 +1,7 @@
 
 # Ignore Python cache
 **/__pycache__/
+*.pyc
 
 # Ignore content in folders.
 dataset/*

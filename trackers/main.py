@@ -2,7 +2,7 @@
 import os
 import argparse
 import importlib
-from Tracker import Tracker
+from Tracker import Tracker_abs
 
 
 def parseInput(list_detectors):
@@ -64,8 +64,8 @@ if __name__ == '__main__':
     detections_path = os.path.join(args.detc_path, args.detector, args.set_data)
     track_path =      os.path.join(args.track_path, tracker.tracker_name(), args.detector, args.set_data)
 
-    Tracker.create_path(track_path)
-    Tracker.create_path(args.aux_path)
+    Tracker_abs.create_path(track_path)
+    Tracker_abs.create_path(args.aux_path)
 
 
     # Load data
@@ -73,6 +73,6 @@ if __name__ == '__main__':
 
 
     # Run Evaluation
-    tracker.calculate_tracks(args.aux_path, track_path)
+    tracker.calculate_tracks(img_path, args.aux_path, track_path)
 
 

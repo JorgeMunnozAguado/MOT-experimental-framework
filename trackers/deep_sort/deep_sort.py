@@ -1,22 +1,27 @@
 
 import os
-import glob
-import time
 
-from Tracker import Tracker
+from Tracker import Tracker_abs
 
 from deep_sort.tools.generate_detections import *
 from deep_sort.deep_sort_app import *
 
 
-class deep_sort(Tracker):
+class deep_sort(Tracker_abs):
 
     def __init__(self, batch_size):
 
         super().__init__('deep_sort', batch_size)
 
+        # Model for load detections.
         self.model = 'trackers/deep_sort/models/mars-small128.pb'
 
+        # Hyperparameters
+        self.min_confidence = 0
+        self.max_cosine_distance = 0.2
+        self.nms_max_overlap = 1.0
+        self.min_detection_height = 0
+        self.nn_budget = 0
 
 
     def load_data(self, img_path, detections_path, aux_path):
@@ -25,12 +30,20 @@ class deep_sort(Tracker):
         generate_detections(encoder, img_path, aux_path, detections_path)
 
 
-    def calculate_tracks(self, aux_path, track_path, verbose=0):
-        
-        run(args.sequence_dir, args.detection_file, args.output_file,
-        args.min_confidence, args.nms_max_overlap, args.min_detection_height,
-        args.max_cosine_distance, args.nn_budget, args.display)
+    def calculate_tracks(self, img_path, aux_path, track_path, verbose=0):
 
+        # Display
+        if verbose:  display = True
+        else:        display = False
 
+        list_sequence = os.listdir(img_path)
 
-        
+        for sequece_name in list_sequence:
+
+            sequence_dir = os.path.join(img_path, sequece_name)
+            output_file =  os.path.join(track_path, sequece_name) + '.txt'
+            detection_file = os.path.join(aux_path, sequece_name) + '.npy'
+
+            run(sequence_dir, detection_file, output_file, self.min_confidence,
+                self.nms_max_overlap, self.min_detection_height, self.max_cosine_distance,
+                self.nn_budget, display)
