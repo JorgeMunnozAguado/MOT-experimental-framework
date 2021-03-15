@@ -4,7 +4,6 @@ import argparse
 import importlib
 
 from torchvision import transforms
-from torch.utils.data import DataLoader
 
 from DatasetLoader import DatasetLoader
 
@@ -59,10 +58,10 @@ def eval_sets(detector, loader, batch, device):
         if args.verbose: print('Processing set', setName, '...')
 
         dataset = loader.loadData(setName, transform=t)
-        dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=False, num_workers=1)
+        # dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=False, num_workers=1)
 
         # evalSet(dataloader, model, args.batch, device)
-        detector.eval_set(dataloader, loader, device)
+        detector.eval_set(dataset, loader, device)
 
         # Save the results
         loader.save(setName)

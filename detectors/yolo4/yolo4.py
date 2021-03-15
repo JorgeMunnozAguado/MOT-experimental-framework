@@ -8,7 +8,7 @@ import numpy as np
 import random
 
 from Detector import Detector
-
+from torch.utils.data import DataLoader
 
 
 PATH = 'detectors/yolo4/'
@@ -42,9 +42,12 @@ class yolo4(Detector):
 
 
 
-    def eval_set(self, dataloader, loader, device, verbose=0):
+    def eval_set(self, dataset, loader, device, verbose=0):
         '''Run evaluation over loaded data.
         '''
+
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
+        
 
         for i_batch, (images, y) in enumerate(dataloader):
 

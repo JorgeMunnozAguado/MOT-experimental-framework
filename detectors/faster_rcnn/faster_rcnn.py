@@ -1,5 +1,6 @@
 
 import torchvision
+from torch.utils.data import DataLoader
 
 from Detector import Detector
 
@@ -19,9 +20,12 @@ class faster_rcnn(Detector):
 
 
 
-    def eval_set(self, dataloader, loader, device, verbose=0):
+    def eval_set(self, dataset, loader, device, verbose=0):
         '''Run evaluation over loaded data.
         '''
+
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
+
 
         for i_batch, (images, y) in enumerate(dataloader):
 
