@@ -1,7 +1,7 @@
 # vim: expandtab:ts=4:sw=4
 import numpy as np
 import colorsys
-from application_util.image_viewer import ImageViewer
+from uma.application_util.image_viewer import ImageViewer
 
 
 def create_unique_color_float(tag, hue_step=0.41):

@@ -3,8 +3,8 @@ import cv2
 import numpy as np
 import time
 from uma.application_util import visualization
-from tracker.detection import Detection
-from tracker.mot_tracker import MOT_Tracker
+from uma.tracker.detection import Detection
+from uma.tracker.mot_tracker import MOT_Tracker
 import configparser
 
 def gather_sequence_info(sequence_dir, det_dir):

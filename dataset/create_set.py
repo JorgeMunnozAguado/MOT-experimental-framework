@@ -34,7 +34,7 @@ def video2img(path_in, path_out, verbose=0):
     # Video read.
     vidcap = cv2.VideoCapture(path_in)
 
-    count = 0
+    count = 1
     image_prev = None
 
 

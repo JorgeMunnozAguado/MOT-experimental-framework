@@ -4,9 +4,9 @@ import functools
 import logging
 import numpy as np
 import tensorflow as tf
-from tracker.Siamese_inference.convolutional_alexnet import convolutional_alexnet_arg_scope, convolutional_alexnet
-from tracker.Siamese_utils.infer_utils import get_exemplar_images
-from tracker.Siamese_utils.misc_utils import get_center
+from uma.tracker.Siamese_inference.convolutional_alexnet import convolutional_alexnet_arg_scope, convolutional_alexnet
+from uma.tracker.Siamese_utils.infer_utils import get_exemplar_images
+from uma.tracker.Siamese_utils.misc_utils import get_center
 
 slim = tf.contrib.slim
 weight_decay = 5e-4

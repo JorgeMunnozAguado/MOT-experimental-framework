@@ -1,1 +1,1 @@
-from uma import uma
+from .uma import uma

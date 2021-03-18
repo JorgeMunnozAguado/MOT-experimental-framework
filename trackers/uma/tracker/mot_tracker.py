@@ -5,9 +5,9 @@ import numba
 from sklearn.utils.linear_assignment_ import linear_assignment
 from .track import Track, TrackState
 import tensorflow as tf
-from tracker.Siamese_inference import inference_wrapper
-from tracker.Siamese_inference.Siamese_tracker import Siamese_Tracker
-from tracker.Siamese_utils.misc_utils import load_cfgs, get_center, auto_select_gpu
+from uma.tracker.Siamese_inference import inference_wrapper
+from uma.tracker.Siamese_inference.Siamese_tracker import Siamese_Tracker
+from uma.tracker.Siamese_utils.misc_utils import load_cfgs, get_center, auto_select_gpu
 
 
 class MOT_Tracker:

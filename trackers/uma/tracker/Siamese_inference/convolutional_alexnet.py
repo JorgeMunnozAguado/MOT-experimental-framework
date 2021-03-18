@@ -1,7 +1,7 @@
 import logging
 import tensorflow as tf
-from tracker.Siamese_utils.misc_utils import get
-import config.config as CONFIG
+from uma.tracker.Siamese_utils.misc_utils import get
+import uma.config.config as CONFIG
 
 slim = tf.contrib.slim
 

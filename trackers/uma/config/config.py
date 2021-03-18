@@ -1,7 +1,14 @@
-DATA_ROOT = '/home/junbo/datasets/MOT-Challenge/'
+
+import os
+
+
+path = os.getcwd()
+path = os.path.join(path, 'dataset/')
+
+DATA_ROOT = path
 # trained model
 MODEL_NAME = 'npair0.1-id0.1-se_block2'
-MODEL_DIR = 'models/' + MODEL_NAME
+MODEL_DIR = 'trackers/uma/models/' + MODEL_NAME
 # inference mode
 TEST_DATASET = ['MOT16', 'MOT17'][0]
 TEST_TYPE = ['train', 'test'][0]

@@ -1,4 +1,4 @@
-from tracker.Siamese_utils.infer_utils import convert_bbox_format, Rectangle
+from uma.tracker.Siamese_utils.infer_utils import convert_bbox_format, Rectangle
 import numpy as np
 
 

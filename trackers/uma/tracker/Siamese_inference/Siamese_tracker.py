@@ -1,7 +1,7 @@
 import logging
 import numpy as np
-from tracker.Siamese_utils.infer_utils import convert_bbox_format, Rectangle
-from tracker.Siamese_utils.misc_utils import get_center
+from uma.tracker.Siamese_utils.infer_utils import convert_bbox_format, Rectangle
+from uma.tracker.Siamese_utils.misc_utils import get_center
 
 
 class TargetState(object):

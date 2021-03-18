@@ -15,7 +15,7 @@ import numpy as np
 import tensorflow as tf
 from cv2 import resize
 
-from tracker.Siamese_utils.misc_utils import get_center
+from uma.tracker.Siamese_utils.misc_utils import get_center
 
 Rectangle = collections.namedtuple('Rectangle', ['x', 'y', 'width', 'height'])
 

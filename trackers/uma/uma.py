@@ -3,8 +3,8 @@ import os
 import glob
 import time
 
-import uma.run_public
-import config.config as CONFIG
+import uma.run_public as run_public
+import uma.config.config as CONFIG
 
 from Tracker import Tracker_abs
 
