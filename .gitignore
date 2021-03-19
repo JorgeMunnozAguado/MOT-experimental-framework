@@ -7,6 +7,11 @@
 dataset/*
 outputs/
 
+# Ignore files
+*.mp4
+*.avi
+
+
 # Ignore network weights
 *.weights
 
