@@ -1,5 +1,6 @@
 
 import os
+import time
 
 from Tracker import Tracker_abs
 
@@ -36,6 +37,8 @@ class deep_sort(Tracker_abs):
         if verbose:  display = True
         else:        display = False
 
+        sequences_time = {}
+
         list_sequence = os.listdir(img_path)
 
         for sequece_name in list_sequence:
@@ -44,6 +47,16 @@ class deep_sort(Tracker_abs):
             output_file =  os.path.join(track_path, sequece_name) + '.txt'
             detection_file = os.path.join(aux_path, sequece_name) + '.npy'
 
+            start = time.time()
+
             run(sequence_dir, detection_file, output_file, self.min_confidence,
                 self.nms_max_overlap, self.min_detection_height, self.max_cosine_distance,
                 self.nn_budget, display)
+
+
+            end = time.time()
+
+            sequences_time[sequece_name] = end - start
+
+
+        return sequences_time

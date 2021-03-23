@@ -14,7 +14,7 @@ COLORS = ['b', 'green', 'r', 'c', 'm', 'y', 'fuchsia', 'lime']
 
 
 
-def parseInput(list_detectors):
+def parseInput():
     '''Parse input of the script.
     '''
 
@@ -26,6 +26,7 @@ def parseInput(list_detectors):
     parser.add_argument("--set", help="Name of set of data.", required=True)
 
     # Important arguments, but optional.
+    parser.add_argument('-v', "--verbose", help="Print some debug info.")
 
     # Other optional arguments
 
@@ -43,13 +44,10 @@ class Visualize:
         data, self.extension = os.path.splitext(data)
 
         self.track_path = os.path.join('outputs/tracks', tracker, detector, set_data, data)
-
         self.imgs_path  = os.path.join('dataset/', set_data, data, 'img1')
+        self.out_data  = os.path.join('outputs/', 'videos', data + '.mp4')
 
-        if verbose:
-
-            print(self.track_path)
-            print(self.imgs_path)
+        if not os.path.exists('outputs/videos'):  os.mkdir('outputs/videos')
 
 
         self.readTracks()
@@ -92,6 +90,7 @@ class Visualize:
         self.frames = frame
         
 
+
     def processTraces(self):
 
         ids = {}
@@ -109,7 +108,7 @@ class Visualize:
 
 
         self.ids = ids
-        # print(ids)
+
 
 
     def listColors(self):
@@ -163,7 +162,7 @@ class Visualize:
         return int(x+(w/2)), int(y+(h/2))
 
 
-    def draw_bbox(self, img, thickness=2):
+    def draw_bbox(self, img, frame, thickness=2):
 
         # color = (0, 0, 255)
 
@@ -206,48 +205,66 @@ class Visualize:
 
     def videoWritter(self, size):
 
-        self.writter = cv2.VideoWriter('out.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 25.0, size)
+        self.writter = cv2.VideoWriter(self.out_data, cv2.VideoWriter_fourcc(*'mp4v'), 25.0, size)
+        # out = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
 
     def writeVideo(self, img):
 
         self.writter.write(img)
 
-        # out = cv2.VideoWriter('project.avi', cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
     def saveVideo(self):
 
         self.writter.release()
 
 
-if __name__ == '__main__':
 
-    detector = 'public'
-    tracker  = 'sort'
-    set_data = 'MOT20'
+def saveSetData(detector, tracker, set_data, data, verbose=0):
 
-    data = Visualize.subsets(detector, tracker, set_data)
-
-    # For each set
-
-    visual_s = Visualize(detector, tracker, set_data, data[0])
-
-
+    visual_s = Visualize(detector, tracker, set_data, data, verbose=verbose)
 
 
     # PLOT ---------------------------------------------
-
     frame = 1
 
-    while True:
-    # while frame < 30:
+    # while True:
+    while frame < 30:
 
         img = visual_s.readFrame(frame)
 
         if img is None: break
 
-        visual_s.draw_bbox(img)
+        visual_s.draw_bbox(img, frame)
         visual_s.writeVideo(img)
 
         frame += 1
 
 
     visual_s.saveVideo()
+
+
+
+
+
+if __name__ == '__main__':
+
+
+    args = parseInput()
+
+    detector = args.detector #'public'
+    tracker  = args.tracker  #'sort'
+    set_data = args.set      #'MOT20'
+    verbose  = args.verbose
+
+
+    data = Visualize.subsets(detector, tracker, set_data)
+
+    if verbose: print('All sets to display:', data)
+
+    # For each set
+    for d in data:
+
+        if verbose: print(' - Set:', d)
+
+        saveSetData(detector, tracker, set_data, d, verbose=verbose)
+
+    

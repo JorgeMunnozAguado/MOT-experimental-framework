@@ -2,12 +2,19 @@
 
 # Download datasets.
 cd dataset
-sh download_data.sh
+bash download_data.sh
 cd ..
+
 
 # Setup detectors enviroment. (and download models)
 cd detectors
-sh setup-env.sh
+bash setup-env.sh
+cd ..
+
+
+# Setup trackers enviroment. (and download models)
+cd trackers
+bash setup.sh
 cd ..
 
 

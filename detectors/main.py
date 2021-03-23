@@ -1,5 +1,10 @@
 
+
+import os
+import sys
+import time
 import torch
+import pathlib
 import argparse
 import importlib
 
@@ -7,6 +12,10 @@ from torchvision import transforms
 
 from DatasetLoader import DatasetLoader
 
+newpath = os.path.join(pathlib.Path().absolute(), 'auxiliar')
+sys.path.insert(0, newpath)
+
+from Logger import Logger, saveFPS, str2bool
 
 
 def parseInput(list_detectors):
@@ -23,6 +32,7 @@ def parseInput(list_detectors):
     parser.add_argument("--name", help="Add a postfix to the detector name.")
 
     # Other optional arguments
+    parser.add_argument("--clean_log", help="Remove logs and create new file.", type=str2bool, default=False)
     parser.add_argument("--path", help="Path were to find the data.", default='dataset')
     parser.add_argument("--set_data", help="Name of set of data.", default='MOT20')
     parser.add_argument("--detc_path", help="Name of folder used to store detections.", default='outputs/detections')
@@ -46,7 +56,7 @@ def readConfigFile():
 
 
 
-def eval_sets(detector, loader, batch, device):
+def eval_sets(detector, loader, batch, device, logger, name, set_data, verbose=0):
     '''Evaluate each set of data.
     '''
 
@@ -55,16 +65,27 @@ def eval_sets(detector, loader, batch, device):
 
     for setName in loader.listData():
 
-        if args.verbose: print('Processing set', setName, '...')
+        if verbose: print('Processing set', setName, '...')
 
         dataset = loader.loadData(setName, transform=t)
-        # dataloader = DataLoader(dataset, batch_size=args.batch, shuffle=False, num_workers=1)
 
-        # evalSet(dataloader, model, args.batch, device)
+        start = time.time()
         detector.eval_set(dataset, loader, device)
+        end = time.time()
+
+        # print('>>time', end-start)
+        duration = end - start
+        total_images = loader.framesData(setName)
+        nb_detection = loader.detectionsData()
+        
+        if duration == 0:  frames = total_images
+        else:              frames = total_images / duration
+
+        logger.writeLog([setName, '%.2f' % frames, '%d' % total_images, '%.2f' % duration, '%d' % nb_detection])
 
         # Save the results
         loader.save(setName)
+        saveFPS(name, set_data, setName, frames)
 
 
 
@@ -88,6 +109,9 @@ if __name__ == '__main__':
     args = parseInput(list_detectors)
 
 
+    # Create logfile.
+    logger = Logger('detectors/', 'detectors.log', ['NAME', 'FPS', 'IMAGES', 'TIME', 'DETECTIONS'], clean=args.clean_log)
+
     # Select the device where it supposed to run.
     device = select_device(args.device)
 
@@ -98,11 +122,29 @@ if __name__ == '__main__':
     detector = class_(args.batch)                              # Create detector object
 
 
+    # Write header in logger
+    logger.writeHeader(detector.detector_name(args.name))
+
+
     # Set up the dataset.
     loader = DatasetLoader(path=args.path, set_data=args.set_data, savePath=args.detc_path, detectorName=detector.detector_name(args.name))
 
     
     # Run evaluation
-    eval_sets(detector, loader, args.batch, device)
+    try:
+        eval_sets(detector, loader, args.batch, device, logger, detector.detector_name(args.name), args.set_data, verbose=args.verbose)
+
+    except KeyboardInterrupt:
+
+        logger.writeEnd()
+        sys.exit(0)
+
+    except Exception as e:
+
+        logger.writeException('EVATUATING DETECTORS', e)
+
+
+    logger.writeEnd()
+
 
 

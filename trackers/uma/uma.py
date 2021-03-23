@@ -35,6 +35,8 @@ class uma(Tracker_abs):
         # det_dir = '../../MOT-experimental-framework/outputs/detections/public/MOT20/'
         # output_dir = '../../MOT-experimental-framework/outputs/tracks/uma/MOT20/'
 
+        sequences_time = {}
+
 
         data_dir = img_path
         det_dir  = self.detections_path
@@ -78,15 +80,20 @@ class uma(Tracker_abs):
                 img_list = os.listdir(os.path.join(sequence_dir, 'img1'))
                 frame_count = int(max(img_list).split('.')[0])
 
+            start = time.time()
 
             sequence_speed.append(run_public.run(
                 sequence_dir, det_dir, trained_model, output_file,
                 max_age,  context_amount, iou, occlusion_thres,
                 association_thres, display))
 
+            end = time.time()
+
+            sequences_time[sequence] = end - start
+
         if verbose: print("Runtime: %g ms, %g fps.\n%s" % (sum(sequence_speed)/len(sequence_speed), 1000/(sum(sequence_speed)/len(sequence_speed)),output_dir))
 
 
-
+        return sequences_time
 
         

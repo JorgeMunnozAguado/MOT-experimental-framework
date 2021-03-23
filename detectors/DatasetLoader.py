@@ -51,6 +51,15 @@ class DatasetLoader:
         return self.sets
 
 
+    def framesData(self, setName):
+
+        path = os.path.join(self.path, setName, 'img1')
+
+        return len( os.listdir(path) )
+
+
+
+
     def update(self, frame, boxes, scores, labels, label_permited=[1], preprocess=True):
 
         # Process bounding boxes
@@ -68,6 +77,10 @@ class DatasetLoader:
             self.results.append(detection)
 
 
+
+    def detectionsData(self):
+
+        return len( self.results )
 
 
 

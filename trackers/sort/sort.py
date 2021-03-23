@@ -24,8 +24,6 @@ class sort(Tracker_abs):
 
         self.detections_path = detections_path
 
-        pass
-
 
     def calculate_tracks(self, img_path, aux_path, track_path, verbose=0):
 
@@ -34,6 +32,7 @@ class sort(Tracker_abs):
         total_frames = 0
 
         path = track_path
+        sequences_time = {}
 
         pattern = os.path.join(self.detections_path, '*', 'det', 'det.txt')
 
@@ -46,6 +45,8 @@ class sort(Tracker_abs):
 
             seq_dets = np.loadtxt(seq_dets_fn, delimiter=',')
             seq = seq_dets_fn[pattern.find('*'):].split(os.path.sep)[0]
+
+            start = time.time()
     
 
             with open(os.path.join(path, '%s.txt'%(seq)),'w') as out_file:
@@ -69,12 +70,17 @@ class sort(Tracker_abs):
                         print('%d,%d,%.2f,%.2f,%.2f,%.2f,1,-1,-1,-1'%(frame,d[4],d[0],d[1],d[2]-d[0],d[3]-d[1]),file=out_file)
 
 
+            end = time.time()
+
+            sequences_time[seq] = end - start
+
+
 
         if verbose == 1:
 
             print("Total Tracking took: %.3f seconds for %d frames or %.1f FPS" % (total_time, total_frames, total_frames / total_time))
 
 
-
+        return sequences_time
 
         
