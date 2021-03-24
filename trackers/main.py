@@ -113,6 +113,8 @@ if __name__ == '__main__':
     except Exception as e:
 
         logger.writeException('PREPROCESSING DETECTIONS', e)
+        logger.writeEnd()
+        sys.exit(0)
 
 
 
@@ -131,8 +133,6 @@ if __name__ == '__main__':
     except Exception as e:
 
         logger.writeException('CALCULATING TRACES', e)
-
-    # calculateMetrics(logger, img_path, sequences_time)
 
 
     logger.writeEnd()

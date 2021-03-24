@@ -1,5 +1,6 @@
 *.pb
-
+tracks/
+models/
 
 
 # Byte-compiled / optimized / DLL files
