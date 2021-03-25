@@ -69,7 +69,7 @@ class DatasetLoader:
         # Save permited boxes in variable.
         for b, s, l in zip(boxes, scores, labels):
 
-            if not l in label_permited: continue
+            if (label_permited is not None) and (not l in label_permited): continue
 
             # Set format and save in variable
             # detection = [frame] + [-1] + b + [s.item()] + [-1, -1, -1]
