@@ -8,7 +8,7 @@ cd ..
 
 # Setup detectors enviroment. (and download models)
 cd detectors
-bash setup-env.sh
+bash setup.sh
 cd ..
 
 

@@ -7,6 +7,9 @@ import numpy as np
 from matplotlib.colors import to_rgb
 
 
+# python auxiliar/visualize.py --detector . --tracker . --set MOT20 --path dataset/ -v 2
+
+
 # Need more colors?:
 # https://matplotlib.org/2.0.2/examples/color/named_colors.html
 COLORS = ['b', 'green', 'r', 'c', 'm', 'y', 'fuchsia', 'lime']
@@ -26,6 +29,7 @@ def parseInput():
     parser.add_argument("--set", help="Name of set of data.", required=True)
 
     # Important arguments, but optional.
+    parser.add_argument("--path", help="Path to tracking folder.", default='outputs/tracks')
     parser.add_argument('-v', "--verbose", help="Print some debug info.")
 
     # Other optional arguments
@@ -39,13 +43,16 @@ class Visualize:
 
 
 
-    def __init__(self, detector, tracker, set_data, data, verbose=0):
+    def __init__(self, detector, tracker, set_data, data, verbose=0, path='outputs/tracks', aux=False):
 
         data, self.extension = os.path.splitext(data)
 
-        self.track_path = os.path.join('outputs/tracks', tracker, detector, set_data, data)
+        if aux:  self.track_path = os.path.join(path, set_data, data, 'gt')
+        else:    self.track_path = os.path.join(path, tracker, detector, set_data, data)
+
         self.imgs_path  = os.path.join('dataset/', set_data, data, 'img1')
         self.out_data  = os.path.join('outputs/', 'videos', data + '.mp4')
+        self.aux = aux
 
         if not os.path.exists('outputs/videos'):  os.mkdir('outputs/videos')
 
@@ -62,10 +69,11 @@ class Visualize:
 
 
 
-    @staticmethod
-    def subsets(detector, tracker, set_data):
 
-        path = os.path.join('outputs/tracks', tracker, detector, set_data)
+    @staticmethod
+    def subsets(detector, tracker, set_data, path='outputs/tracks'):
+
+        path = os.path.join(path, tracker, detector, set_data)
 
         return os.listdir( path )
 
@@ -73,7 +81,8 @@ class Visualize:
 
     def readTracks(self):
 
-        tracks = np.loadtxt(self.track_path + '.txt', delimiter=',')
+        if self.aux:  tracks = np.loadtxt(self.track_path + '/gt.txt', delimiter=',')
+        else:         tracks = np.loadtxt(self.track_path + '.txt', delimiter=',')
 
         unique = np.unique(tracks[:, 0])
 
@@ -218,16 +227,16 @@ class Visualize:
 
 
 
-def saveSetData(detector, tracker, set_data, data, verbose=0):
+def saveSetData(detector, tracker, set_data, data, path, verbose=0, aux=False):
 
-    visual_s = Visualize(detector, tracker, set_data, data, verbose=verbose)
+    visual_s = Visualize(detector, tracker, set_data, data, path=path, verbose=verbose, aux=aux)
 
 
     # PLOT ---------------------------------------------
     frame = 1
 
-    # while True:
-    while frame < 30:
+    while True:
+    # while frame < 30:
 
         img = visual_s.readFrame(frame)
 
@@ -253,10 +262,13 @@ if __name__ == '__main__':
     detector = args.detector #'public'
     tracker  = args.tracker  #'sort'
     set_data = args.set      #'MOT20'
+    path     = args.path
     verbose  = args.verbose
+    aux      = False
+    # aux      = True
 
 
-    data = Visualize.subsets(detector, tracker, set_data)
+    data = Visualize.subsets(detector, tracker, set_data, path)
 
     if verbose: print('All sets to display:', data)
 
@@ -265,6 +277,6 @@ if __name__ == '__main__':
 
         if verbose: print(' - Set:', d)
 
-        saveSetData(detector, tracker, set_data, d, verbose=verbose)
+        saveSetData(detector, tracker, set_data, d, path, verbose=verbose, aux=aux)
 
     
