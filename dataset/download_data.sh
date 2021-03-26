@@ -24,6 +24,17 @@ cd MOT17
 mv train/* .
 rm -r test
 rmdir train
+
+rm -r MOT17-??-SDP/
+rm -r MOT17-??-DPM/
+
+for f in MOT17-??-FRCNN/; do
+
+	id=$(echo "$f" | cut -d"-" -f2)
+	mv MOT17-$id-FRCNN MOT17-$id
+
+done
+
 cd ..
 
 
