@@ -25,6 +25,7 @@ class retinanet(Detector):
         '''
 
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
+        self.model.to(device)
 
 
         for i_batch, (images, y) in enumerate(dataloader):
@@ -38,4 +39,4 @@ class retinanet(Detector):
 
                 i_frame = (i_batch * self.batch_size) + i + 1
 
-                loader.update(i_frame, frame['boxes'].detach().numpy(), frame['scores'].detach().numpy(), frame['labels'], label_permited=self.label_permited)
+                loader.update(i_frame, frame['boxes'].cpu().detach().numpy(), frame['scores'].cpu().detach().numpy(), frame['labels'].cpu(), label_permited=self.label_permited)
