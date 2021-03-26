@@ -20,3 +20,5 @@ outputs/
 !dataset/create_set.py
 !dataset/MOT_structure.py
 !dataset/download_data.sh
+!dataset/download_visDrone.py
+!dataset/download_visDrone.sh
