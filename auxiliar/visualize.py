@@ -108,6 +108,8 @@ class Visualize:
 
             for obj in frame:
 
+                if obj[6] in [9, 10, 11]: continue
+
                 if not obj[0] in ids:
 
                     ids[obj[0]] = []
@@ -176,6 +178,8 @@ class Visualize:
         # color = (0, 0, 255)
 
         for bbox in self.frames[frame]:
+
+            if bbox[6] in [9, 10, 11]: continue
 
             x1, y1, x2, y2 = Visualize.fromWHtoX(int(bbox[1]), int(bbox[2]), int(bbox[3]), int(bbox[4]))
 
@@ -264,8 +268,8 @@ if __name__ == '__main__':
     set_data = args.set      #'MOT20'
     path     = args.path
     verbose  = args.verbose
-    aux      = False
-    # aux      = True
+    # aux      = False
+    aux      = True
 
 
     data = Visualize.subsets(detector, tracker, set_data, path)
