@@ -42,13 +42,14 @@ class efficientdet(Detector):
         hparams = ''
         line_thickness = None
         max_boxes_to_draw = 100
-        min_score_thresh = 0.4
-        nms_method = 'hard'
+        min_score_thresh = 0
+        nms_method = 'gaussian'
         saved_model_dir = os.path.join('detectors', "efficientdet", 'tmp/saved_model')
         tflite_path = None
 
 
-        self.label_permited = [1]
+        # Go to keras/label_util.py
+        self.label_permited = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
         self.inspector = ModelInspector(
@@ -71,17 +72,6 @@ class efficientdet(Detector):
     def eval_set(self, dataset, loader, device, verbose=0, display=False):
         '''Run evaluation over loaded data.
         '''
-
-        # if verbose == 2:
-
-        #     label_map = label_util.get_label_map(label_map or 'coco')
-        #     category_index = {k: {'id': k, 'name': label_map[k]} for k in label_map}
-
-        #     for n in self.label_permited:
-
-        #         print(category_index[classes[n]]['name'])
-
-
 
         input_images = np.asarray(dataset.imgs)[:, 0].tolist()
 

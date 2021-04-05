@@ -165,6 +165,7 @@ class ModelInspector(object):
 
      # = kwargs.get('loader')
      # = kwargs.get('label_permited')
+    display=True
 
 
     # Serving time batch size should be fixed.
@@ -191,19 +192,27 @@ class ModelInspector(object):
       detections_bs = driver.serve_images(raw_images)
 
 
-      # print(detections_bs)
-
-
       for j in range(size_before_pad):
-
-        # print('->>', self.batch_size, batch_size)
-        # print(len(detections_bs))
-        # print(len(raw_images))
-        # print(raw_images[0].shape)
 
         boxes  = detections_bs[j][:, 1:5]
         labels = detections_bs[j][:, 6].astype(int)
         scores = detections_bs[j][:, 5]
+
+
+        # Cut detections
+        for k, b in enumerate(boxes):
+
+          if k == 0: continue
+          if np.all(boxes[k-1] == b):
+
+            cut = k
+            break
+
+
+        boxes  = boxes[:cut]
+        labels = labels[:cut]
+        scores = scores[:cut]
+
 
         frame = i * batch_size + j
 

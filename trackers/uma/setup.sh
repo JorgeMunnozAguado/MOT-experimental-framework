@@ -25,5 +25,4 @@ conda create -y --name uma python=3.6
 source activate uma
 
 # Install requirements
-pip install numpy
 pip install -r requirements.txt
