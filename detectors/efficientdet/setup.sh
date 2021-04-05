@@ -7,7 +7,7 @@
 MODEL=efficientdet-d2
 
 # Batch need to be the same as in Inference
-BATCH=5
+BATCH=15
 
 
 conda create -y --name efficientdet python=3.6
@@ -18,4 +18,4 @@ pip install -r requirements.txt
 pip install pycocotools
 conda install -y -c pytorch pytorch torchvision cudatoolkit=10.1
 
-# python setup.py --model $MODEL --batch $BATCH
+python setup.py --model $MODEL --batch $BATCH

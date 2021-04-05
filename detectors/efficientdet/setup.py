@@ -27,13 +27,13 @@ def setUp(args):
 
     model_name = args.model
     ckpt_path  = model_name
-    saved_model_dir = 'detectors/efficientdet/tmp/saved_model'
+    saved_model_dir = 'tmp/saved_model'
     batch_size = args.batch
 
 
-    # model_name = 
+    # model_name =
     logdir = 'detectors/efficientdet/tmp/deff/'
-    # runmode = 
+    # runmode =
     trace_filename = None
     threads = 0
     bm_runs = 10
@@ -41,7 +41,7 @@ def setUp(args):
     delete_logdir = True
     freeze = False
     use_xla = False
-    # ckpt_path = 
+    # ckpt_path =
     export_ckpt = None
     hparams = ''
     input_image = None
@@ -52,7 +52,7 @@ def setUp(args):
     max_boxes_to_draw = 100
     min_score_thresh = 0.4
     nms_method = 'hard'
-    # saved_model_dir = 
+    # saved_model_dir =
     tflite_path = None
 
 
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     args = parse_input()
 
     # Download model
-    download_files(args.model, 'detectors/efficientdet/tmp/saved_model')
+    download_files(args.model, 'tmp/saved_model')
 
     # Run setup
     inspector = setUp(args)
