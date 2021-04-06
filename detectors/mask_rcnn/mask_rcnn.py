@@ -16,7 +16,8 @@ class mask_rcnn(Detector):
         self.model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
         self.model.eval()
 
-        self.label_permited = [1]
+        # Classes:  https://pytorch.org/vision/stable/models.html#object-detection-instance-segmentation-and-person-keypoint-detection
+        self.label_permited = [1, 2, 3, 4, 6, 7, 8]
 
 
 

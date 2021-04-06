@@ -38,7 +38,9 @@ class yolo4(Detector):
 
 
         self.thresh = 0.25
-        self.label_permited = ['person']
+        
+        # Go to cfg/coco.names
+        self.label_permited = ['person', 'bicycle', 'car', 'motorbike', 'bus', 'truck']
 
 
 

@@ -144,11 +144,12 @@ class Visualize:
 
 
 
-    def readFrame(self, frame):
+    def readFrame(self, frame, k=6):
         '''
         '''
 
-        file_name = os.path.join(self.imgs_path, '%.6d.jpg'%frame)
+        if k == 5:   file_name = os.path.join(self.imgs_path, '%.6d.jpg'%frame)
+        elif k == 6: file_name = os.path.join(self.imgs_path, '%.7d.jpg'%frame)
 
         return cv2.imread(file_name)
 
@@ -176,10 +177,12 @@ class Visualize:
     def draw_bbox(self, img, frame, thickness=2):
 
         # color = (0, 0, 255)
+        ids = [1]
 
         for bbox in self.frames[frame]:
 
             if bbox[6] in [9, 10, 11]: continue
+            if not bbox[0] in ids: continue
 
             x1, y1, x2, y2 = Visualize.fromWHtoX(int(bbox[1]), int(bbox[2]), int(bbox[3]), int(bbox[4]))
 

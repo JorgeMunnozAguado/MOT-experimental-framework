@@ -163,11 +163,6 @@ class ModelInspector(object):
     driver.load(self.saved_model_dir)
 
 
-     # = kwargs.get('loader')
-     # = kwargs.get('label_permited')
-    display=True
-
-
     # Serving time batch size should be fixed.
     batch_size = self.batch_size or 1
     all_files = list(tf.io.gfile.glob(image_path_pattern))
