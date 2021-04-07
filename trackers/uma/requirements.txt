@@ -1,11 +1,11 @@
-sacred                                                                                              
+sacred
 scipy
-matplotlib                                                                                                     
+matplotlib
 numba
 numPy
 pillow
 scikit-learn==0.22.2
-matplotlib                                                                                                
-numPy                                                                                                      
-opencv-python                  
-tensorflow                                                               
+matplotlib
+numPy
+opencv-python
+tensorflow==1.15
