@@ -31,15 +31,15 @@ python detectors/main.py --detector retinanet --set_data MOT17 --batch 3 -dvc cu
 python detectors/main.py --detector retinanet --set_data VisDrone2019-MOT-val --batch 3 -dvc cuda
 
 # mask_rcnn
-python detectors/main.py --detector mask_rcnn --set_data MOT20 --batch 3 -dvc cuda
-python detectors/main.py --detector mask_rcnn --set_data MOT17 --batch 3 -dvc cuda
-python detectors/main.py --detector mask_rcnn --set_data VisDrone2019-MOT-val --batch 3 -dvc cuda
+python detectors/main.py --detector mask_rcnn --set_data MOT20 --batch 1 -dvc cuda
+python detectors/main.py --detector mask_rcnn --set_data MOT17 --batch 1 -dvc cuda
+python detectors/main.py --detector mask_rcnn --set_data VisDrone2019-MOT-val --batch 1 -dvc cuda
 
 # efficientdet
 source activate efficientdet
-python detectors/main.py --detector efficientdet --set_data MOT20 --batch 15 -dvc cuda
-python detectors/main.py --detector efficientdet --set_data MOT17 --batch 15 -dvc cuda
-python detectors/main.py --detector efficientdet --set_data VisDrone2019-MOT-val --batch 15 -dvc cuda
+python detectors/main.py --detector efficientdet --name d7x --set_data MOT20 --batch 15 -dvc cuda
+python detectors/main.py --detector efficientdet --name d7x --set_data MOT17 --batch 15 -dvc cuda
+python detectors/main.py --detector efficientdet --name d7x --set_data VisDrone2019-MOT-val --batch 15 -dvc cuda
 
 
 
@@ -55,31 +55,31 @@ python trackers/main.py --tracker sort --detector public --set_data MOT20 --clea
 python trackers/main.py --tracker sort --detector public --set_data MOT17
 python trackers/main.py --tracker sort --detector public --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector yolo3 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker sort --detector yolo3 --set_data MOT17
 python trackers/main.py --tracker sort --detector yolo3 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector yolo4 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector yolo4 --set_data MOT20
 python trackers/main.py --tracker sort --detector yolo4 --set_data MOT17
 python trackers/main.py --tracker sort --detector yolo4 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector faster_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector faster_rcnn --set_data MOT20
 python trackers/main.py --tracker sort --detector faster_rcnn --set_data MOT17
 python trackers/main.py --tracker sort --detector faster_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector keypoint_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector keypoint_rcnn --set_data MOT20
 python trackers/main.py --tracker sort --detector keypoint_rcnn --set_data MOT17
 python trackers/main.py --tracker sort --detector keypoint_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector retinanet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector retinanet --set_data MOT20
 python trackers/main.py --tracker sort --detector retinanet --set_data MOT17
 python trackers/main.py --tracker sort --detector retinanet --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector mask_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector mask_rcnn --set_data MOT20
 python trackers/main.py --tracker sort --detector mask_rcnn --set_data MOT17
 python trackers/main.py --tracker sort --detector mask_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker sort --detector efficientdet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker sort --detector efficientdet --set_data MOT20
 python trackers/main.py --tracker sort --detector efficientdet --set_data MOT17
 python trackers/main.py --tracker sort --detector efficientdet --set_data VisDrone2019-MOT-val
 
@@ -88,35 +88,35 @@ python trackers/main.py --tracker sort --detector efficientdet --set_data VisDro
 # deep_sort
 source activate deep_sort
 
-python trackers/main.py --tracker deep_sort --detector public --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector public --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector public --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector public --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector yolo3 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector yolo3 --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector yolo3 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector yolo4 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector yolo4 --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector yolo4 --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector yolo4 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector faster_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector faster_rcnn --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector faster_rcnn --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector faster_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector keypoint_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector keypoint_rcnn --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector keypoint_rcnn --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector keypoint_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector retinanet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector retinanet --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector retinanet --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector retinanet --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector mask_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector mask_rcnn --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector mask_rcnn --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector mask_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker deep_sort --detector efficientdet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker deep_sort --detector efficientdet --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector efficientdet --set_data MOT17
 python trackers/main.py --tracker deep_sort --detector efficientdet --set_data VisDrone2019-MOT-val
 
@@ -126,34 +126,34 @@ python trackers/main.py --tracker deep_sort --detector efficientdet --set_data V
 # uma
 source activate uma
 
-python trackers/main.py --tracker uma --detector public --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector public --set_data MOT20
 python trackers/main.py --tracker uma --detector public --set_data MOT17
 python trackers/main.py --tracker uma --detector public --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector yolo3 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker uma --detector yolo3 --set_data MOT17
 python trackers/main.py --tracker uma --detector yolo3 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector yolo4 --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector yolo4 --set_data MOT20
 python trackers/main.py --tracker uma --detector yolo4 --set_data MOT17
 python trackers/main.py --tracker uma --detector yolo4 --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector faster_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector faster_rcnn --set_data MOT20
 python trackers/main.py --tracker uma --detector faster_rcnn --set_data MOT17
 python trackers/main.py --tracker uma --detector faster_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector keypoint_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector keypoint_rcnn --set_data MOT20
 python trackers/main.py --tracker uma --detector keypoint_rcnn --set_data MOT17
 python trackers/main.py --tracker uma --detector keypoint_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector retinanet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector retinanet --set_data MOT20
 python trackers/main.py --tracker uma --detector retinanet --set_data MOT17
 python trackers/main.py --tracker uma --detector retinanet --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector mask_rcnn --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector mask_rcnn --set_data MOT20
 python trackers/main.py --tracker uma --detector mask_rcnn --set_data MOT17
 python trackers/main.py --tracker uma --detector mask_rcnn --set_data VisDrone2019-MOT-val
 
-python trackers/main.py --tracker uma --detector efficientdet --set_data MOT20 --clean_log True
+python trackers/main.py --tracker uma --detector efficientdet --set_data MOT20
 python trackers/main.py --tracker uma --detector efficientdet --set_data MOT17
 python trackers/main.py --tracker uma --detector efficientdet --set_data VisDrone2019-MOT-val
