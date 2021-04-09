@@ -23,7 +23,10 @@ cd trackers
 bash setup.sh
 cd ..
 
-
+# Setup evaluation enviroment.
+cd evaluation
+bash setup.sh
+cd ..
 
 
 
