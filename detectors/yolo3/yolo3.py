@@ -70,8 +70,6 @@ class yolo3(Detector):
                 loader.update(i_frame, bboxes, scores, labels, label_permited=self.label_permited, preprocess=False)
 
 
-            break
-
 
 
     def detect_image(self, image):

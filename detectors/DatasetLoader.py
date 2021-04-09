@@ -5,6 +5,8 @@ from torchvision import datasets
 
 
 IMAGES = 'img1'
+TRANSLATE_str_int = {'person':1, 'bicycle':4, 'car':3, 'motorbike':5, 'bus':3, 'truck':3}
+TRANSLATE_int = {1:1, 2:4, 3:3, 4:5, 6:3, 7:3, 8:3}
 
 class DatasetLoader:
 
@@ -69,11 +71,16 @@ class DatasetLoader:
         # Save permited boxes in variable.
         for b, s, l in zip(boxes, scores, labels):
 
+            # Check if label is permited
             if (label_permited is not None) and (not l in label_permited): continue
+
+            # Translate label
+            if type(l) == str:      l = TRANSLATE_str_int[l]
+            elif type(l) == int:    l = TRANSLATE_int[l]
 
             # Set format and save in variable
             # detection = [frame] + [-1] + b + [s.item()] + [-1, -1, -1]
-            detection = [frame] + list(b) + [s]
+            detection = [frame] + list(b) + [s] + [l]
             self.results.append(detection)
 
 
@@ -98,7 +105,7 @@ class DatasetLoader:
 
         file = os.path.join(file, 'det.txt')
 
-        np.savetxt(file, self.results, delimiter=',', fmt=['%d,-1', '%.0f', '%.0f', '%.0f', '%.0f', '%.4f,-1,-1,-1'])
+        np.savetxt(file, self.results, delimiter=',', fmt=['%d,-1', '%.0f', '%.0f', '%.0f', '%.0f', '%.4f', '%d,-1,-1'])
 
         self.results = []
 
