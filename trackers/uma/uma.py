@@ -36,6 +36,7 @@ class uma(Tracker_abs):
         # output_dir = '../../MOT-experimental-framework/outputs/tracks/uma/MOT20/'
 
         sequences_time = {}
+        self.max_age = 1
 
 
         data_dir = img_path
@@ -95,5 +96,3 @@ class uma(Tracker_abs):
 
 
         return sequences_time
-
-        
