@@ -88,7 +88,7 @@ if __name__ == '__main__':
 
     # Initialice Logger
     logger = Logger('trackers/', 'trackers.log', ['NAME', 'FPS', 'IMAGES', 'TIME'], clean=args.clean_log)
-    logger.writeHeader(tracker.tracker_name(args.name))
+    logger.writeHeader(tracker.tracker_name(args.name) + '  -  ' + args.detector)
 
 
     # Setup paths.
@@ -136,4 +136,3 @@ if __name__ == '__main__':
 
 
     logger.writeEnd()
-

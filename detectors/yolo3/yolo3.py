@@ -38,7 +38,7 @@ class yolo3(Detector):
 
 
         self.thresh = 0.25
-        
+
         # Go to cfg/coco.names
         self.label_permited = ['person', 'bicycle', 'car', 'motorbike', 'bus', 'truck']
 
@@ -49,7 +49,7 @@ class yolo3(Detector):
         '''
 
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
-        
+
 
         for i_batch, (images, y) in enumerate(dataloader):
 
