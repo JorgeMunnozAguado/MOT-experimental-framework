@@ -78,6 +78,8 @@ class DatasetLoader:
             if type(l) == str:      l = TRANSLATE_str_int[l]
             elif type(l) == int:    l = TRANSLATE_int[l]
 
+            if (b[2] == 0) or (b[3] == 0): print('continue'); continue
+
             # Set format and save in variable
             # detection = [frame] + [-1] + b + [s.item()] + [-1, -1, -1]
             detection = [frame] + list(b) + [s] + [l]

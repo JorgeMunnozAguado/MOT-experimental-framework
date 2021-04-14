@@ -2,6 +2,8 @@
 import os
 import shutil
 
+import numpy as np
+
 
 
 def move_public_detections(path, end):
@@ -18,6 +20,35 @@ def move_public_detections(path, end):
         shutil.move(origin, new_f)
 
 
+def move_gt_detections(path, end, labels=[1, 2, 3, 4, 5, 6, 7]):
 
-move_public_detections('dataset/MOT20', 'outputs/detections/public/MOT20')
-move_public_detections('dataset/MOT17', 'outputs/detections/public/MOT17')
+    for folder in os.listdir(path):
+
+        new_f  = os.path.join(end, folder, 'det/')
+        origin = os.path.join(path, folder, 'gt/gt.txt')
+
+        print(origin, '->>', new_f)
+
+        # Create folders
+        os.makedirs(new_f)
+
+
+        # Load GT
+        fp_in = np.loadtxt(origin, delimiter=',')
+
+
+        # Get permited labels
+        fp_in[:, 1] = -1
+        idx = np.where(np.isin(fp_in[:, 7], labels))
+        final = fp_in[idx]
+
+        # Save in file
+        np.savetxt(new_f + 'det.txt', final, delimiter=',', fmt=['%d', '%d', '%.0f', '%.0f', '%.0f', '%.0f', '%d', '%d', '%.2f'])
+
+
+
+# move_public_detections('dataset/MOT20', 'outputs/detections/public/MOT20')
+# move_public_detections('dataset/MOT17', 'outputs/detections/public/MOT17')
+
+move_gt_detections('dataset/MOT20', 'outputs/detections/gt/MOT20')
+move_gt_detections('dataset/MOT17', 'outputs/detections/gt/MOT17')

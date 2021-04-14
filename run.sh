@@ -53,7 +53,11 @@ source activate sort
 
 python trackers/main.py --tracker sort --detector public --set_data MOT20 --clean_log True
 python trackers/main.py --tracker sort --detector public --set_data MOT17
-python trackers/main.py --tracker sort --detector public --set_data VisDrone2019-MOT-val
+# python trackers/main.py --tracker sort --detector public --set_data VisDrone2019-MOT-val
+
+python trackers/main.py --tracker sort --detector gt --set_data MOT20
+python trackers/main.py --tracker sort --detector gt --set_data MOT17
+# python trackers/main.py --tracker sort --detector gt --set_data VisDrone2019-MOT-val
 
 python trackers/main.py --tracker sort --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker sort --detector yolo3 --set_data MOT17
@@ -90,7 +94,11 @@ source activate deep_sort
 
 python trackers/main.py --tracker deep_sort --detector public --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector public --set_data MOT17
-python trackers/main.py --tracker deep_sort --detector public --set_data VisDrone2019-MOT-val
+# python trackers/main.py --tracker deep_sort --detector public --set_data VisDrone2019-MOT-val
+
+python trackers/main.py --tracker deep_sort --detector gt --set_data MOT20
+python trackers/main.py --tracker deep_sort --detector gt --set_data MOT17
+# python trackers/main.py --tracker deep_sort --detector gt --set_data VisDrone2019-MOT-val
 
 python trackers/main.py --tracker deep_sort --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker deep_sort --detector yolo3 --set_data MOT17
@@ -128,7 +136,11 @@ source activate uma
 
 python trackers/main.py --tracker uma --detector public --set_data MOT20
 python trackers/main.py --tracker uma --detector public --set_data MOT17
-python trackers/main.py --tracker uma --detector public --set_data VisDrone2019-MOT-val
+# python trackers/main.py --tracker uma --detector public --set_data VisDrone2019-MOT-val
+
+python trackers/main.py --tracker uma --detector gt --set_data MOT20
+python trackers/main.py --tracker uma --detector gt --set_data MOT17
+# python trackers/main.py --tracker uma --detector gt --set_data VisDrone2019-MOT-val
 
 python trackers/main.py --tracker uma --detector yolo3 --set_data MOT20
 python trackers/main.py --tracker uma --detector yolo3 --set_data MOT17
