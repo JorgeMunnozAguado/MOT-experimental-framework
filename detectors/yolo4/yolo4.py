@@ -65,7 +65,7 @@ class yolo4(Detector):
                 detections = self.detect_image(image)
 
                 # Preprocess output (detections)
-                labels, scores, bboxes = yolo4.process_output(detections)
+                labels, scores, bboxes = self.process_output(detections, image)
 
                 loader.update(i_frame, bboxes, scores, labels, label_permited=self.label_permited, preprocess=False)
 
@@ -90,8 +90,18 @@ class yolo4(Detector):
         return detections
 
 
-    @staticmethod
-    def process_output(detections):
+    def process_output(self, detections, image):
+
+        # Relation (original / resize)
+        width_mod  = darknet.network_width(self.model)
+        height_mod = darknet.network_height(self.model)
+
+        width_ori  = image.shape[2]
+        height_ori = image.shape[1]
+
+        width_rel  = width_ori / width_mod
+        height_rel = height_ori / height_mod
+
 
         detections = np.asarray(detections, dtype=object)
 
@@ -100,7 +110,10 @@ class yolo4(Detector):
         bboxes = detections[:, 2]
 
         scores = scores.astype(np.float)
-        bboxes = [list(b) for b in bboxes]
+        bboxes = np.asarray([list(b) for b in bboxes])
+
+        bboxes[:, [0, 2]] = bboxes[:, [0, 2]] * width_rel
+        bboxes[:, [1, 3]] = bboxes[:, [1, 3]] * height_rel
 
 
         return labels, scores, bboxes

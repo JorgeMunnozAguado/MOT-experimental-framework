@@ -204,12 +204,15 @@ class ModelInspector(object):
             break
 
 
+        cut = cut -1
+
         boxes  = boxes[:cut]
         labels = labels[:cut]
         scores = scores[:cut]
 
+        boxes[:, [0, 1, 2, 3]] = boxes[:, [1, 0, 3, 2]]
 
-        frame = i * batch_size + j
+        frame = i * batch_size + j + 1
 
         if verbose: print(frame)
 

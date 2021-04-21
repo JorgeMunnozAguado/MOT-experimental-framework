@@ -271,8 +271,8 @@ if __name__ == '__main__':
     set_data = args.set      #'MOT20'
     path     = args.path
     verbose  = args.verbose
-    # aux      = False
-    aux      = True
+    aux      = False
+    # aux      = True
 
 
     data = Visualize.subsets(detector, tracker, set_data, path)

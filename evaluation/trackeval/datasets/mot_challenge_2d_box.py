@@ -439,6 +439,20 @@ class MotChallenge2DBox(_BaseDataset):
         data['num_timesteps'] = raw_data['num_timesteps']
         data['seq'] = raw_data['seq']
 
+
+        # get track representations
+        # # data['gt_tracks'] = raw_data['classes_to_gt_tracks'][cls_id]
+        # data['gt_track_ids'] = data['gt_ids'][t]
+        # # data['gt_track_areas'] = raw_data['classes_to_gt_track_areas'][cls_id]
+        # # data['gt_track_iscrowd'] = raw_data['classes_to_gt_track_iscrowd'][cls_id]
+        # # data['dt_tracks'] = raw_data['classes_to_dt_tracks'][cls_id]
+        # data['dt_track_ids'] = data['tracker_ids'][t]
+        # # data['dt_track_areas'] = raw_data['classes_to_dt_track_areas'][cls_id]
+        # # data['dt_track_scores'] = raw_data['classes_to_dt_track_scores'][cls_id]
+        # # data['iou_type'] = 'mask'
+
+
+
         # Ensure again that ids are unique per timestep after preproc.
         self._check_unique_ids(data, after_preproc=True)
 

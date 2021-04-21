@@ -255,10 +255,12 @@ class TrackMAP(_BaseMetric):
 
                 precision[iou_thr_idx, :, ig_idx] = (np.array(pr_at_recall))
 
+        print('-----------------------> SE EJECUTA')
         res = {'precision': precision, 'recall': recall}
 
         # compute the precision and recall averages for the respective alpha thresholds and ignore masks
         for lbl in self.lbls:
+            print('-----------------------> SE EJECUTA', lbl)
             res['AP_' + lbl] = np.zeros((len(self.array_labels)), dtype=np.float)
             res['AR_' + lbl] = np.zeros((len(self.array_labels)), dtype=np.float)
 
