@@ -19,6 +19,7 @@ parser.add_argument('-q', '--quiet', help="minimalistic console output.", action
 parser.add_argument('-i', '--ignore', nargs='+', type=str, help="ignore a list of classes.")
 # argparse receiving list of classes with specific IoU (e.g., python main.py --set-class-iou person 0.7)
 parser.add_argument('--set-class-iou', nargs='+', type=str, help="set IoU for a specific class.")
+parser.add_argument('--img_path', help="path of images.", required=True)
 args = parser.parse_args()
 
 '''
@@ -47,7 +48,8 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 GT_PATH = os.path.join('auxiliar', 'GT')
 DR_PATH = os.path.join('auxiliar', 'DET')
 # if there are no images then no animation can be shown
-IMG_PATH = os.path.join('../../', 'dataset/MOT17/', 'MOT17-02/img1/')
+# IMG_PATH = os.path.join('../../', 'dataset/MOT17/', 'MOT17-02/img1/')
+IMG_PATH = os.path.join('../../', args.img_path)
 
 if os.path.exists(IMG_PATH): 
     for dirpath, dirnames, files in os.walk(IMG_PATH):
@@ -737,6 +739,12 @@ with open(output_files_path + "/output.txt", 'w') as output_file:
     mAP = sum_AP / n_classes
     text = "mAP = {0:.2f}%".format(mAP*100)
     output_file.write(text + "\n")
+
+    with open('auxiliar.txt', 'w') as f:
+
+        f.write(str(mAP*100))
+
+
     print(text)
 
 """

@@ -96,7 +96,7 @@ def cleanFile(path):
 
 
 
-def processSequence(gt_path, det_path, gt_auxiliar='evaluation/mAP/auxiliar/GT', det_auxiliar='evaluation/mAP/auxiliar/DET'):
+def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/auxiliar/GT', det_auxiliar='evaluation/mAP/auxiliar/DET'):
 
     # Clean axiliar folder
     cleanFile(gt_auxiliar)
@@ -119,23 +119,64 @@ def processSequence(gt_path, det_path, gt_auxiliar='evaluation/mAP/auxiliar/GT',
         processFrame(det_file[key], det_filename)
 
 
-    os.system("python evaluation/mAP/mAP.py")
+    os.system("python evaluation/mAP/mAP.py --img_path " + img_path)
 
 
 
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    gt_path  = os.path.join('dataset/MOT17/', 'MOT17-02/gt/gt.txt')
+    # list_sets = ['MOT17', 'MOT20']
+    list_sets = ['MOT17']
 
-    for detector in list_detectors:
+    output_file = os.path.join('outputs/evaluation', 'mAP.txt')
+    
+    verbose = True
 
-        if detector in ['public']: continue
+    with open(output_file, "w") as file:
 
-        det_path = os.path.join('outputs/detections', detector, 'MOT17/MOT17-02/det/det.txt')
+        if verbose: print('File open')
 
-        print('DETECTOR:  ', detector)
-        processSequence(gt_path, det_path)
+        file.write('| Detector | Subset name | mAP |\n')
+        file.write('--------------------------------\n')
+
+
+        for detector in list_detectors:
+
+            # list_sets = os.listdir('dataset')
+            if verbose: print('DETECTOR:  ', detector)
+
+            for set_name in list_sets:
+
+                list_subsets = os.listdir( os.path.join('dataset', set_name) )
+
+                for subset in list_subsets:
+
+                    if verbose: print('->', set_name, subset)
+
+                    if detector in ['public']: continue
+
+                    gt_path  = os.path.join('dataset/', set_name, subset, 'gt/gt.txt')
+                    img_path = os.path.join('dataset/', set_name, subset, 'img1')
+                    det_path = os.path.join('outputs/detections', detector, set_name, subset, 'det/det.txt')
+
+
+                    processSequence(gt_path, det_path, img_path)
+
+
+                    with open('evaluation/mAP/auxiliar.txt', 'r') as f:
+
+                        mAP = f.read()
+
+                        if verbose: print(mAP)
+
+
+                    file.write('| ' + detector + ' | ' + set_name + '/' + subset + ' | ' + mAP + ' | \n')
+
+
+
+
+
 
 
     # detector = 'yolo3'
