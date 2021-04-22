@@ -24,7 +24,7 @@ Some tips for adding your own detector to the framework:
 MOT17 scores:
 
 | Detector | Subset name | mAP |
---------------------------------
+|----------|-------------|-----|
 | gt | AVERAGE | 100.0 | 
 | faster_rcnn | AVERAGE | 60.60716427905071 | 
 | mask_rcnn | AVERAGE | 60.62512214547893 | 
