@@ -140,7 +140,7 @@ if __name__ == '__main__':
         if verbose: print('File open')
 
         file.write('| Detector | Subset name | mAP |\n')
-        file.write('--------------------------------\n')
+        file.write('|----------|-------------|-----|\n')
 
 
         for detector in list_detectors:
