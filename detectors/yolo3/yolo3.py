@@ -116,5 +116,8 @@ class yolo3(Detector):
         bboxes[:, [0, 2]] = bboxes[:, [0, 2]] * width_rel
         bboxes[:, [1, 3]] = bboxes[:, [1, 3]] * height_rel
 
+        bboxes[:, 0] = bboxes[:, 0] - bboxes[:, 2] / 2
+        bboxes[:, 1] = bboxes[:, 1] - bboxes[:, 3] / 2
+
 
         return labels, scores, bboxes

@@ -126,6 +126,8 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
+    # list_detectors = ['efficientdet-d7x']
+
     # list_sets = ['MOT17', 'MOT20']
     list_sets = ['MOT17']
 
@@ -143,8 +145,13 @@ if __name__ == '__main__':
 
         for detector in list_detectors:
 
-            # list_sets = os.listdir('dataset')
+            if detector in ['public', 'efficientdet']: continue
             if verbose: print('DETECTOR:  ', detector)
+
+            # list_sets = os.listdir('dataset')
+
+            average = []
+
 
             for set_name in list_sets:
 
@@ -154,7 +161,6 @@ if __name__ == '__main__':
 
                     if verbose: print('->', set_name, subset)
 
-                    if detector in ['public']: continue
 
                     gt_path  = os.path.join('dataset/', set_name, subset, 'gt/gt.txt')
                     img_path = os.path.join('dataset/', set_name, subset, 'img1')
@@ -172,6 +178,11 @@ if __name__ == '__main__':
 
 
                     file.write('| ' + detector + ' | ' + set_name + '/' + subset + ' | ' + mAP + ' | \n')
+
+                    average.append(float(mAP))
+
+
+            file.write('| ' + detector + ' | AVERAGE | ' + str(sum(average) / len(average)) + ' | \n')
 
 
 
