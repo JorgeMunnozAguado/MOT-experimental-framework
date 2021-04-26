@@ -1,7 +1,9 @@
 
 import os
 import numpy as np
+
 from torchvision import datasets
+from torchvision import transforms
 
 
 IMAGES = 'img1'
@@ -44,7 +46,20 @@ class DatasetLoader:
 
 
 
-    def loadData(self, setName, transform=None):
+    def loadData(self, setName, resize=400, transform=None):
+
+
+        # self.resize = None
+
+        # if transform is None:
+
+        #     transform = transforms.Compose([
+        #         transforms.Resize(resize),
+        #         transforms.ToTensor(),
+        #     ])
+
+        #     self.resize = resize
+
 
         path = os.path.join(self.path, setName)
 

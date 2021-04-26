@@ -47,6 +47,8 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
     out_array = []
 
+    # permited=[1]
+
     for i, label in enumerate(frame[:, 6]):
 
         if not label in permited: continue
@@ -119,6 +121,7 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
         processFrame(det_file[key], det_filename)
 
 
+    # https://github.com/Cartucho/mAP
     os.system("python evaluation/mAP/mAP.py --img_path " + img_path)
 
 
