@@ -15,7 +15,7 @@ from torchvision import utils
 
 class Loader_train(Dataset):
 
-    def __init__(self, path, set_list=None, preprocess=None):
+    def __init__(self, path, set_list=None, preprocess=None, jump=30):
 
         self.preprocess = preprocess
 
@@ -46,17 +46,20 @@ class Loader_train(Dataset):
         self.data = np.asarray(self.data)
 
 
+        self.jump = jump
+
+
 
     def __len__(self):
 
         # return len(self.data)
-        return int(len(self.data) / 10)
+        return int(len(self.data) / self.jump)
 
 
 
     def __getitem__(self, idx):
 
-        idx = idx * 10
+        idx = idx * self.jump
 
         img_path    = self.data[idx, 0]
         input_image = Image.open(img_path)
@@ -90,8 +93,8 @@ class Loader_train(Dataset):
 
         data = []
 
-        # for img_path in list_path:
-        for img_path in list_path[:2]:
+        for img_path in list_path:
+        # for img_path in list_path[:2]:
 
             frame = int(img_path.split('.')[0])
             img_path = images_path + '/' + img_path

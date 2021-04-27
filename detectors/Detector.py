@@ -27,7 +27,7 @@ class Detector(ABC):
 
 
 
-    def train_model(self, data):
+    def train_model(self, data, epochs, device='cpu'):
         pass
 
 

@@ -30,6 +30,7 @@ def parseInput(list_detectors):
     # Important arguments, but optional.
     parser.add_argument("--batch", help="Size of the batch.", default='5', type=int)
     parser.add_argument("--name", help="Add a postfix to the detector name.")
+    parser.add_argument("--epochs", help="Epochs of training (fine tuning).", default='15', type=int)
 
     # Other optional arguments
     parser.add_argument("--clean_log", help="Remove logs and create new file.", type=str2bool, default=False)
@@ -61,7 +62,7 @@ def eval_sets(detector, loader, batch, device, logger, name, set_data, verbose=0
     '''
 
 
-    detector.train_model(loader, device)
+    detector.train_model(loader, device, epochs)
 
 
 
@@ -107,18 +108,17 @@ if __name__ == '__main__':
 
     
     # Run evaluation
-    eval_sets(detector, loader, args.batch, device, logger, detector.detector_name(args.name), args.set_data, verbose=args.verbose)
-    # try:
-    #     eval_sets(detector, loader, args.batch, device, logger, detector.detector_name(args.name), args.set_data, verbose=args.verbose)
+    try:
+        detector.train_model(loader, args.epochs, device=device)
 
-    # except KeyboardInterrupt:
+    except KeyboardInterrupt:
 
-    #     logger.writeEnd()
-    #     sys.exit(0)
+        logger.writeEnd()
+        sys.exit(0)
 
-    # except Exception as e:
+    except Exception as e:
 
-    #     logger.writeException('EVATUATING DETECTORS', e)
+        logger.writeException('EVATUATING DETECTORS', e)
 
 
     logger.writeEnd()

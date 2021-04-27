@@ -46,7 +46,7 @@ class faster_rcnn(Detector):
                 loader.update(i_frame, frame['boxes'].cpu().detach().numpy(), frame['scores'].cpu().detach().numpy(), frame['labels'].cpu(), label_permited=self.label_permited)
 
 
-    def train_model(self, dataloader, device='cpu'):
+    def train_model(self, dataloader, epochs, device='cpu'):
 
 
         # print(self.model.backbone.parameters())
@@ -63,4 +63,4 @@ class faster_rcnn(Detector):
         optimizer = optim.Adam(self.model.parameters(), lr=0.0018, weight_decay=0.0015)
 
 
-        self.train(dataloader, None, criterion, optimizer, 50, validation=False, device=device)
+        self.train(dataloader, None, criterion, optimizer, epochs, validation=False, device=device)
