@@ -49,11 +49,14 @@ class Loader_train(Dataset):
 
     def __len__(self):
 
-        return len(self.data)
+        # return len(self.data)
+        return int(len(self.data) / 10)
 
 
 
     def __getitem__(self, idx):
+
+        idx = idx * 10
 
         img_path    = self.data[idx, 0]
         input_image = Image.open(img_path)

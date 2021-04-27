@@ -30,6 +30,7 @@ def parseInput(list_detectors):
     # Important arguments, but optional.
     parser.add_argument("--batch", help="Size of the batch.", default='5', type=int)
     parser.add_argument("--name", help="Add a postfix to the detector name.")
+    parser.add_argument("--size", help="Size of the image to enter in the model.", type=int, default=None)
 
     # Other optional arguments
     parser.add_argument("--clean_log", help="Remove logs and create new file.", type=str2bool, default=False)
@@ -60,7 +61,7 @@ def eval_sets(detector, loader, batch, device, logger, name, set_data, verbose=0
     '''Evaluate each set of data.
     '''
 
-    t = transforms.Compose([transforms.ToTensor()])
+    t = [transforms.ToTensor()]
 
 
     for setName in loader.listData():
@@ -127,7 +128,7 @@ if __name__ == '__main__':
 
 
     # Set up the dataset.
-    loader = DatasetLoader(path=args.path, set_data=args.set_data, savePath=args.detc_path, detectorName=detector.detector_name(args.name))
+    loader = DatasetLoader(path=args.path, set_data=args.set_data, savePath=args.detc_path, detectorName=detector.detector_name(args.name), size=args.size)
 
     
     # Run evaluation

@@ -47,7 +47,7 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
     out_array = []
 
-    # permited=[1]
+    # permited=[1, 2, 7]
 
     for i, label in enumerate(frame[:, 6]):
 

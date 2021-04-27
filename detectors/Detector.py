@@ -93,9 +93,9 @@ class Detector(ABC):
 
             train_losses.append(train_loss)
 
-            # Save a checkpoint
-            checkpoint_filename = f'detectors/faster_rcnn/checkpoints/faster_rcnn-{epoch:03d}.pkl'
-            Detector.save_checkpoint(optimizer, self.model, epoch, checkpoint_filename)
+        # Save a checkpoint
+        checkpoint_filename = f'detectors/faster_rcnn/checkpoints/faster_rcnn-{epoch:03d}.pkl'
+        Detector.save_checkpoint(optimizer, self.model, epoch, checkpoint_filename)
 
         return train_losses, valid_losses
 

@@ -41,8 +41,6 @@ class faster_rcnn(Detector):
 
             for i, frame in enumerate(output):
 
-                print(frame.keys())
-
                 i_frame = (i_batch * self.batch_size) + i + 1
 
                 loader.update(i_frame, frame['boxes'].cpu().detach().numpy(), frame['scores'].cpu().detach().numpy(), frame['labels'].cpu(), label_permited=self.label_permited)

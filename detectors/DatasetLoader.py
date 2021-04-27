@@ -2,17 +2,19 @@
 import os
 import numpy as np
 
+from PIL import Image
 from torchvision import datasets
 from torchvision import transforms
 
 
 IMAGES = 'img1'
-TRANSLATE_str_int = {'person':1, 'bicycle':4, 'car':3, 'motorbike':5, 'bus':3, 'truck':3}
+
+TRANSLATE_str_int = {'person':1, 'bicycle':4, 'car':3, 'motorbike':5, 'bus':3, 'truck':3, 'train':3}
 TRANSLATE_int = {1:1, 2:4, 3:3, 4:5, 6:3, 7:3, 8:3}
 
 class DatasetLoader:
 
-    def __init__(self, detectorName, path='data/images', set_data='MOT20', savePath='outputs/detections'):
+    def __init__(self, detectorName, path='data/images', set_data='MOT20', savePath='outputs/detections', size=None):
         '''Create a 
         '''
 
@@ -23,6 +25,7 @@ class DatasetLoader:
         self.detectorName = detectorName
 
         self.results = []
+        self.size = size
 
 
         # Create path where to save detections
@@ -46,24 +49,67 @@ class DatasetLoader:
 
 
 
-    def loadData(self, setName, resize=400, transform=None):
+    def size_images_ori(self):
+
+        img_path = os.path.join(self.data_path, 'img1')
+        img_list = os.listdir(img_path)
+        # print (img_path)
+
+        img_path = img_path + '/' + img_list[0]
+
+        img = Image.open(img_path)
+
+        width  = img.size[0]
+        height = img.size[1]
+
+        # (1920, 1080)
+        return width, height
 
 
-        # self.resize = None
 
-        # if transform is None:
+    def size_images_mod(self):
 
-        #     transform = transforms.Compose([
-        #         transforms.Resize(resize),
-        #         transforms.ToTensor(),
-        #     ])
+        img_path = os.path.join(self.data_path, 'img1')
+        img_list = os.listdir(img_path)
+        # print (img_path)
 
-        #     self.resize = resize
+        img_path = img_path + '/' + img_list[0]
+
+        img = Image.open(img_path)
+        img = self.transform(img)
+
+        width  = img.shape[2]
+        height = img.shape[1]
+
+        # (1920, 1080)
+        return width, height
+
+
+    def loadData(self, setName, transform=None):
+
+        if transform is None:
+
+            transform = [
+                transforms.ToTensor(),
+            ]
+
+
+        if not self.size is None:
+
+            transform.insert(0, transforms.Resize(self.size))
+
+
+
+        transform = transforms.Compose(transform)
+
+        self.transform = transform
 
 
         path = os.path.join(self.path, setName)
 
         self.sets = datasets.ImageFolder(path, transform=transform)
+        self.data_path = path
+
 
         return self.sets
 
@@ -82,6 +128,8 @@ class DatasetLoader:
         # Process bounding boxes
         if preprocess:
             boxes = DatasetLoader.processBoxes(boxes)
+
+        self.resizeBoxes(boxes)
 
         # Save permited boxes in variable.
         for b, s, l in zip(boxes, scores, labels):
@@ -139,3 +187,31 @@ class DatasetLoader:
                           axis=1)
 
         return boxes
+
+
+    def resizeBoxes(self, bboxes):
+
+        # print(bboxes)
+        if self.size is None: return
+
+        width_ori, height_ori = self.size_images_ori()
+        width_mod, height_mod = self.size_images_mod()
+
+        width_rel  = width_ori / width_mod
+        height_rel = height_ori / height_mod
+
+        # print(width_rel, '=', width_ori, '/', width_mod)
+        # print(height_rel, '=', height_ori, '/', height_mod)
+
+
+        bboxes[:, [0, 2]] = bboxes[:, [0, 2]] * width_rel
+        bboxes[:, [1, 3]] = bboxes[:, [1, 3]] * height_rel
+
+        bboxes[:, 0] = bboxes[:, 0] - bboxes[:, 2] / 2
+        bboxes[:, 1] = bboxes[:, 1] - bboxes[:, 3] / 2
+
+        # print(bboxes)
+        # print('---------------------------------------------')
+        # print('---------------------------------------------')
+
+        return bboxes

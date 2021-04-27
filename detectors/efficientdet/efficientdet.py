@@ -49,7 +49,7 @@ class efficientdet(Detector):
 
 
         # Go to keras/label_util.py
-        self.label_permited = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.label_permited = [1, 2, 3, 4, 6, 7, 8, 9]
 
 
         self.inspector = ModelInspector(
