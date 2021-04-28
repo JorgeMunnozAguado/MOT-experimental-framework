@@ -10,13 +10,16 @@ from Detector import Detector
 
 class faster_rcnn(Detector):
 
-    def __init__(self, batch_size):
+    def __init__(self, batch_size, trained=False):
 
         super().__init__('faster_rcnn', batch_size)
 
 
         # Load model (pretrained)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+
+        if trained: self.model = Detector.load_checkpoint(None, self.model, 'detectors/faster_rcnn/checkpoints/faster_rcnn.pkl')
+
         self.model.eval()
 
         # Classes:  https://pytorch.org/vision/stable/models.html#object-detection-instance-segmentation-and-person-keypoint-detection

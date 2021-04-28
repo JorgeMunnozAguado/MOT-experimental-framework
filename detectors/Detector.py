@@ -112,3 +112,18 @@ class Detector(ABC):
         }
 
         torch.save(checkpoint_dict, filename)
+
+
+    @staticmethod
+    def load_checkpoint(optimizer, model, filename):
+
+        # checkpoint_dict = torch.load(filename)
+        checkpoint_dict = torch.load(filename, map_location=torch.device('cpu'))
+
+        epoch = checkpoint_dict['epoch']
+        model.load_state_dict(checkpoint_dict['model'])
+
+        if optimizer is not None:
+            optimizer.load_state_dict(checkpoint_dict['optimizer'])
+
+        return model
