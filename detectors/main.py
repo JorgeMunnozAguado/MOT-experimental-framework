@@ -34,11 +34,13 @@ def parseInput(list_detectors):
 
     # Other optional arguments
     parser.add_argument("--clean_log", help="Remove logs and create new file.", type=str2bool, default=False)
+    parser.add_argument("--trained", help="Use a trained model (only if coded).", type=str2bool, default=False)
     parser.add_argument("--path", help="Path were to find the data.", default='dataset')
     parser.add_argument("--set_data", help="Name of set of data.", default='MOT20')
     parser.add_argument("--detc_path", help="Name of folder used to store detections.", default='outputs/detections')
     parser.add_argument("-dvc", "--device", help="Device where is suposed to execute.", default='Auto')
     parser.add_argument("-v", "--verbose", help="Print debug information.", default=1, type=int)
+
 
     return parser.parse_args()
 
@@ -120,8 +122,13 @@ if __name__ == '__main__':
     # Import the selected detector.
     module = importlib.import_module(args.detector)
     class_ = getattr(module, args.detector)
-    detector = class_(args.batch)                              # Create detector object
 
+
+    # Create detector object
+    if not args.trained:
+        detector = class_(args.batch)
+
+    else:  detector = class_(args.batch, trained=True)
 
     # Write header in logger
     logger.writeHeader(detector.detector_name(args.name))
