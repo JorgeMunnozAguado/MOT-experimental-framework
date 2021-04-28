@@ -7,7 +7,6 @@ import numpy as np
 
 from PIL import Image
 from torchvision import transforms
-from matplotlib import pyplot as plt
 
 from torch.utils.data import Dataset, DataLoader
 from torchvision import utils
@@ -22,7 +21,7 @@ class Loader_train(Dataset):
         if self.preprocess is None:
 
             self.preprocess = transforms.Compose([transforms.ToTensor()])
-        
+
 
 
         self.data = []
@@ -65,7 +64,7 @@ class Loader_train(Dataset):
         input_image = Image.open(img_path)
 
         label = self.data[idx, 1]
-            
+
 
         # reduce mean
         input_tensor = self.preprocess(input_image)
@@ -75,7 +74,7 @@ class Loader_train(Dataset):
 
             label[k] = torch.as_tensor(v)
 
-    
+
         return input_tensor, label
         # return {'X':input_tensor, 'Y':label}
 
@@ -113,7 +112,7 @@ class Loader_train(Dataset):
 
                 x1 = int(bx[0])
                 y1 = int(bx[1])
-                
+
                 x2 = int(bx[0] + bx[2])
                 y2 = int(bx[1] + bx[3])
 

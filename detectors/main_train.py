@@ -104,9 +104,9 @@ if __name__ == '__main__':
 
 
     # Set up the dataset.
-    loader = train_data = Loader_train('dataset/MOT20', set_list=['MOT20-02'])
+    loader = train_data = Loader_train('dataset/MOT20', set_list=['MOT20-02', 'MOT20-03'])
 
-    
+
     # Run evaluation
     try:
         detector.train_model(loader, args.epochs, device=device)
@@ -122,6 +122,3 @@ if __name__ == '__main__':
 
 
     logger.writeEnd()
-
-
-
