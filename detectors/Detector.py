@@ -9,7 +9,7 @@ from torch.autograd import Variable
 class Detector(ABC):
 
     def __init__(self, name, batch_size):
-        
+
         self.name = name
         self.batch_size = batch_size
 
@@ -37,6 +37,7 @@ class Detector(ABC):
 
         # put model in train mode
         self.model.train()
+        self.model.to(device)
 
         # keep track of the training losses during the epoch
         train_losses = []
