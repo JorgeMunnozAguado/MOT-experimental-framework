@@ -49,31 +49,59 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
     # permited=[1, 2, 7]
 
-    for i, label in enumerate(frame[:, 6]):
 
-        if not label in permited: continue
+    # If public detections
+    if frame.shape[-1] == 6:
 
-        # out_list.append( classes_dict[label] )
+        for i, _ in enumerate(frame[:, 0]):
 
-        aux_frame = np.full((6), "", dtype=object)
+            aux_frame = np.full((6), "", dtype=object)
 
-        # Label string
-        # aux_frame[0] = classes_dict[label]
-        aux_frame[0] = 'object'
+            # Label string
+            aux_frame[0] = 'object'
 
-        # Confidence
-        aux_frame[1] = frame[i, 5]
+            # Confidence
+            aux_frame[1] = frame[i, 5]
 
-        # Bounding box
-        aux_frame[2:6] = frame[i, 1:5]
-
-
-        # width, height -> x2, y2
-        aux_frame[4] = aux_frame[2] + aux_frame[4]
-        aux_frame[5] = aux_frame[3] + aux_frame[5]
+            # Bounding box
+            aux_frame[2:6] = frame[i, 1:5]
 
 
-        out_array.append( aux_frame )
+            # width, height -> x2, y2
+            aux_frame[4] = aux_frame[2] + aux_frame[4]
+            aux_frame[5] = aux_frame[3] + aux_frame[5]
+
+
+            out_array.append( aux_frame )
+
+
+    else:
+
+        for i, label in enumerate(frame[:, 6]):
+
+            if not label in permited: continue
+
+            # out_list.append( classes_dict[label] )
+
+            aux_frame = np.full((6), "", dtype=object)
+
+            # Label string
+            # aux_frame[0] = classes_dict[label]
+            aux_frame[0] = 'object'
+
+            # Confidence
+            aux_frame[1] = frame[i, 5]
+
+            # Bounding box
+            aux_frame[2:6] = frame[i, 1:5]
+
+
+            # width, height -> x2, y2
+            aux_frame[4] = aux_frame[2] + aux_frame[4]
+            aux_frame[5] = aux_frame[3] + aux_frame[5]
+
+
+            out_array.append( aux_frame )
 
 
     return np.asarray(out_array)
@@ -129,10 +157,13 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    # list_detectors = ['efficientdet-d7x']
+    list_detectors = ['faster_rcnn', 'public', 'gt']
+    list_detectors = ['public', 'gt']
 
     # list_sets = ['MOT17', 'MOT20']
     list_sets = ['MOT17']
+    # list_not_detectors = ['public', 'efficientdet']
+    list_not_detectors = ['efficientdet']
 
     output_file = os.path.join('outputs/evaluation', 'mAP.txt')
     
@@ -148,7 +179,7 @@ if __name__ == '__main__':
 
         for detector in list_detectors:
 
-            if detector in ['public', 'efficientdet']: continue
+            if detector in list_not_detectors: continue
             if verbose: print('DETECTOR:  ', detector)
 
             # list_sets = os.listdir('dataset')
