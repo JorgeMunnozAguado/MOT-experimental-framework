@@ -17,6 +17,11 @@ class faster_rcnn(Detector):
 
         # Load model (pretrained)
         self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0, rpn_score_thresh=0, box_nms_thresh=0)
+        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.5, rpn_score_thresh=0.5)
+        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.9, rpn_score_thresh=0.9, box_nms_thresh=0.9)
+
+        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.09, box_nms_thresh=0.35)
 
         if trained: self.model = Detector.load_checkpoint(None, self.model, 'detectors/faster_rcnn/checkpoints/faster_rcnn.pkl')
 
@@ -63,7 +68,12 @@ class faster_rcnn(Detector):
         # self.model.roi_heads
 
         criterion = nn.BCELoss()
-        optimizer = optim.Adam(self.model.parameters(), lr=0.0018, weight_decay=0.0015)
+        #optimizer = optim.Adam(self.model.parameters(), lr=0.003, weight_decay=0.0018)
+        #optimizer = optim.Adam(self.model.parameters(), lr=0.025, weight_decay=0.0018)
+        #optimizer = optim.Adam(self.model.parameters(), lr=0.0055, weight_decay=0.0018)
+        #optimizer = optim.Adam(self.model.parameters(), lr=0.0045, weight_decay=0.0025)
+
+        optimizer = optim.SGD(self.model.parameters(), lr=0.005, momentum=0.9, weight_decay=0.0005)
 
 
         self.train(dataloader, None, criterion, optimizer, epochs, validation=False, device=device)

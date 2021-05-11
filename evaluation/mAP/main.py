@@ -157,8 +157,9 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    list_detectors = ['faster_rcnn', 'public', 'gt']
-    list_detectors = ['public', 'gt']
+    list_detectors = ['faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-fine-tune']
+    #list_detectors = ['faster_rcnn', 'faster_rcnn-fine-tune']
+    #list_detectors = ['public', 'gt']
 
     # list_sets = ['MOT17', 'MOT20']
     list_sets = ['MOT17']
@@ -166,7 +167,7 @@ if __name__ == '__main__':
     list_not_detectors = ['efficientdet']
 
     output_file = os.path.join('outputs/evaluation', 'mAP.txt')
-    
+
     verbose = True
 
     with open(output_file, "w") as file:
@@ -229,4 +230,3 @@ if __name__ == '__main__':
 
     # print('DETECTOR:  ', detector)
     # processSequence(gt_path, det_path)
-

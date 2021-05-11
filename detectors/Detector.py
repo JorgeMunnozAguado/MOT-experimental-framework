@@ -45,8 +45,8 @@ class Detector(ABC):
         for inputs, labels in train_loader:
 
             # print('VUELTA')
-            labels = [{k: v.to(device) for k, v in labels.items()}]
-            inputs = list([inputs.to(device)])
+            labels = [{k: v.to(device) for k, v in label.items()} for label in labels]
+            inputs = list([input.to(device) for input in inputs])
 
             # clear previous gradient computation
             optimizer.zero_grad()

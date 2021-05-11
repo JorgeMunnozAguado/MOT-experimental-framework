@@ -9,6 +9,7 @@ import argparse
 import importlib
 
 from torchvision import transforms
+from torch.utils.data import Dataset, DataLoader
 
 from DatasetLoaderTrain import Loader_train
 
@@ -76,6 +77,9 @@ def select_device(device):
     return device
 
 
+def collate_fn(batch):
+    return tuple(zip(*batch))
+
 
 
 if __name__ == '__main__':
@@ -104,7 +108,9 @@ if __name__ == '__main__':
 
 
     # Set up the dataset.
-    loader = train_data = Loader_train('dataset/MOT20', set_list=['MOT20-02', 'MOT20-03'])
+    # loader = train_data = Loader_train('dataset/MOT20', set_list=['MOT20-02', 'MOT20-03'])
+    loader = train_data = Loader_train('dataset/MOT17', set_list=['MOT17-02', 'MOT17-04', 'MOT17-05', 'MOT17-09', 'MOT17-10', 'MOT17-11', 'MOT17-13'])
+    loader = DataLoader(train_data, batch_size=args.batch, shuffle=True, num_workers=4, collate_fn=collate_fn)
 
 
     # Run evaluation
