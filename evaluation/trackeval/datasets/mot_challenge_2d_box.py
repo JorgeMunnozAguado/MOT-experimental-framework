@@ -20,7 +20,7 @@ class MotChallenge2DBox(_BaseDataset):
         default_config = {
             'GT_FOLDER': os.path.join(code_path, 'dataset'),  # Location of GT data
             'TRACKERS_FOLDER': os.path.join(code_path, 'outputs/tracks'),  # Trackers location
-            'OUTPUT_FOLDER': 'outputs/eval',  # Where to save eval results (if None, same as TRACKERS_FOLDER)
+            'OUTPUT_FOLDER': 'outputs/evaluation/tracking',  # Where to save eval results (if None, same as TRACKERS_FOLDER)
             'TRACKERS_TO_EVAL': None,  # Filenames of trackers to eval (if None, all in folder)
             'DETECTORS_TO_EVAL': None,
             'CLASSES_TO_EVAL': ['pedestrian'],  # Valid: ['pedestrian']

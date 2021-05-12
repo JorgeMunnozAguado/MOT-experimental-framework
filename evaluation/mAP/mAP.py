@@ -742,10 +742,22 @@ with open(output_files_path + "/output.txt", 'w') as output_file:
 
     with open('auxiliar.txt', 'w') as f:
 
-        f.write(str(mAP*100))
+        # f.write(str(mAP*100))
+        # mrec, mprec
+
+        f.write('mAP,precision,recall,TP,FP,GT_detections\n')
+        f.write('%f,%f,%f,%d,%d,%d\n' % (mAP * 100, prec[-1] * 100, rec[-1] * 100, tp[-1], fp[-1], sum(gt_counter_per_class.values())))
+
+        # print('mAP', mAP * 100)
+        # print('precision', prec[-1] * 100)
+        # print('recall', rec[-1] * 100)
+        # print('TP', tp[-1])
+        # print('FP', fp[-1])
+        # print('GT detections', sum(gt_counter_per_class.values()))
+        # print('Predicted detections', '?')
 
 
-    print(text)
+    # print(text)
 
 """
  Draw false negatives

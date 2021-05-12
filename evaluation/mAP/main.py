@@ -166,7 +166,17 @@ if __name__ == '__main__':
     # list_not_detectors = ['public', 'efficientdet']
     list_not_detectors = ['efficientdet']
 
-    output_file = os.path.join('outputs/evaluation', 'mAP.txt')
+    output_file = os.path.join('outputs/evaluation/detection', 'summary.txt')
+
+
+    # Check folders
+    if not os.path.exists('outputs/evaluation'):
+        os.makedirs('outputs/evaluation')
+
+    if not os.path.exists('outputs/evaluation/detection'):
+        os.makedirs('outputs/evaluation/detection')
+
+
 
     verbose = True
 
@@ -174,8 +184,9 @@ if __name__ == '__main__':
 
         if verbose: print('File open')
 
-        file.write('| Detector | Subset name | mAP |\n')
-        file.write('|----------|-------------|-----|\n')
+        # file.write('| Detector | mAP | Precision | Recall | TP | FP | GT detections |\n')
+        # file.write('|----------|-----|-----------|--------|----|----|---------------|\n')
+        file.write('Detector,mAP,Precision,Recall,TP,FP,FN,GT detections\n')
 
 
         for detector in list_detectors:
@@ -185,7 +196,28 @@ if __name__ == '__main__':
 
             # list_sets = os.listdir('dataset')
 
-            average = []
+            average = {'mAP':[],
+                       'precision':[],
+                       'recall':[],
+                       'TP':[],
+                       'FP':[],
+                       'GT_detections':[]}
+
+            output_file_detector = os.path.join('outputs/evaluation/detection', detector)
+
+            # Check folders
+            if not os.path.exists(output_file_detector):
+                os.makedirs(output_file_detector)
+
+            output_file_detector = os.path.join(output_file_detector, 'metrics.txt')
+
+
+
+            file_detec = open(output_file_detector, "w")
+
+            # file_detec.write('| Detector | Subset name | mAP | Precision | Recall | TP | FP | GT detections |\n')
+            # file_detec.write('|----------|-------------|-----|-----------|--------|----|----|---------------|\n')
+            file_detec.write('Detector,Set,Subset,mAP,Precision,Recall,TP,FP,GT detections,FN\n')
 
 
             for set_name in list_sets:
@@ -194,7 +226,7 @@ if __name__ == '__main__':
 
                 for subset in list_subsets:
 
-                    if verbose: print('->', set_name, subset)
+                    if verbose: print('   >', set_name, subset)
 
 
                     gt_path  = os.path.join('dataset/', set_name, subset, 'gt/gt.txt')
@@ -202,22 +234,56 @@ if __name__ == '__main__':
                     det_path = os.path.join('outputs/detections', detector, set_name, subset, 'det/det.txt')
 
 
+
+
                     processSequence(gt_path, det_path, img_path)
 
 
                     with open('evaluation/mAP/auxiliar.txt', 'r') as f:
 
-                        mAP = f.read()
+                        data = f.read().split('\n')
 
-                        if verbose: print(mAP)
+                        names = data[0].split(',')
+                        values = data[1].split(',')
+
+                        # print('names:', names, len(names))
+                        # print('values:', values, len(values))
 
 
-                    file.write('| ' + detector + ' | ' + set_name + '/' + subset + ' | ' + mAP + ' | \n')
-
-                    average.append(float(mAP))
+                    #     if verbose: print(mAP)
 
 
-            file.write('| ' + detector + ' | AVERAGE | ' + str(sum(average) / len(average)) + ' | \n')
+
+                    text_w = detector + ',' + set_name + ',' + subset + ','
+
+                    for name, value in zip(names, values):
+
+                        average[name].append( float(value) )
+                        text_w += value + ','
+
+                    
+                    # FN
+                    # Predicted detections
+                    FN = average['GT_detections'][-1] - average['TP'][-1]
+                    text_w += str(FN) + ','
+
+                    file_detec.write(text_w[:-1] + '\n')
+
+                    # continue
+
+
+            mAP           = sum(average['mAP']) / len(average['mAP'])
+            precision     = sum(average['precision']) / len(average['precision'])
+            recall        = sum(average['recall']) / len(average['recall'])
+            TP            = sum(average['TP'])
+            FP            = sum(average['FP'])
+            GT_detections = sum(average['GT_detections'])
+            
+            FN            = GT_detections - TP
+            # Pred_detect   = 
+
+            # file.write('| ' + detector + ' | AVERAGE | ' + str(sum(average) / len(average)) + ' | \n')
+            file.write(detector + ',%f,%f,%f,%d,%d,%d,%d\n' % (mAP, precision, recall, TP, FP, FN, GT_detections))
 
 
 
