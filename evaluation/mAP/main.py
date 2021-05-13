@@ -223,6 +223,7 @@ if __name__ == '__main__':
             for set_name in list_sets:
 
                 list_subsets = os.listdir( os.path.join('dataset', set_name) )
+                list_subsets.sort()
 
                 for subset in list_subsets:
 
@@ -264,7 +265,7 @@ if __name__ == '__main__':
                     
                     # FN
                     # Predicted detections
-                    FN = average['GT_detections'][-1] - average['TP'][-1]
+                    FN = int(average['GT_detections'][-1] - average['TP'][-1])
                     text_w += str(FN) + ','
 
                     file_detec.write(text_w[:-1] + '\n')

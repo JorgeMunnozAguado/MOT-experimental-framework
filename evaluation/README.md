@@ -2,3 +2,9 @@ python evaluation/scripts/run_mot_challenge.py --BENCHMARK MOT17 --USE_PARALLEL 
 
 
 python evaluation/mAP/main.py
+
+
+
+
+
+python evaluation/create_table.py
