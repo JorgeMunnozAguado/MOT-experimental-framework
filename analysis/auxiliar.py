@@ -37,6 +37,24 @@ def correlation_matrix(tb, metrics='all', dist_func=distance.correlation):
     return result_m
 
 
+def correlation_metrics(tb, metrics):
+
+    result_m = np.zeros((len(metrics), len(metrics)))
+
+    for i, m1 in enumerate(metrics):
+
+        v1 = tb[[m1]].values.flatten()
+
+        for j, m2 in enumerate(metrics):
+
+            v2 = tb[[m2]].values.flatten()
+
+            #result_m[i, j] = np.corrcoef(v1, v2)[1, 0]
+            result_m[i, j] = abs(np.corrcoef(v1, v2)[1, 0])
+            
+    return result_m
+
+
 def combinations(tb):
 
     trck = pd.unique(tb['Tracker'])
