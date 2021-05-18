@@ -1,6 +1,7 @@
 
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 from scipy.spatial import distance
 
@@ -93,3 +94,45 @@ def detection_metrics(tb):
 def all_metrics(tb):
 
     return tb.iloc[:, 4:]
+
+
+
+def plot_matrix(data, labels, plot_values=True):
+
+
+    # Create figure.
+    fig = plt.figure(figsize=(12, 12))
+    ax = fig.add_subplot(111)
+
+
+    # Plot matrix
+    cax = ax.matshow(data, interpolation='nearest')
+    fig.colorbar(cax)
+
+
+    # Configure and plot labels
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_yticks(np.arange(len(labels)))
+
+    ax.set_xticklabels(labels, fontsize=20)
+    ax.set_yticklabels(labels, fontsize=20)
+
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="left")
+
+
+    # Plot values of the matrix
+    if plot_values:
+
+        # Loop over data dimensions and create text annotations.
+        for i in range(len(labels)):
+            for j in range(len(labels)):
+                
+                if data[i, j] > 0.8: color = 'b'
+                else: color = 'w'
+                
+                text = ax.text(j, i, '%.2f' % (data[i, j]),
+                               ha="center", va="center", color=color, fontsize=15)
+
+    #ax.set_title("Matrix comparing detection and tracking metrics.")
+
+    plt.show()
