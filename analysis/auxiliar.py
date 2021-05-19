@@ -50,8 +50,8 @@ def correlation_metrics(tb, metrics):
 
             v2 = tb[[m2]].values.flatten()
 
-            #result_m[i, j] = np.corrcoef(v1, v2)[1, 0]
-            result_m[i, j] = abs(np.corrcoef(v1, v2)[1, 0])
+            result_m[i, j] = np.corrcoef(v1, v2)[1, 0]
+            # result_m[i, j] = abs(np.corrcoef(v1, v2)[1, 0])
             
     return result_m
 
@@ -97,17 +97,21 @@ def all_metrics(tb):
 
 
 
-def plot_matrix(data, labels, plot_values=True):
+def plot_matrix(data, labels, plot_values=True, figsize=(12, 12)):
 
 
     # Create figure.
-    fig = plt.figure(figsize=(12, 12))
+    fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111)
 
 
     # Plot matrix
     cax = ax.matshow(data, interpolation='nearest')
-    fig.colorbar(cax)
+
+
+    # Color Bar
+    bax = fig.colorbar(cax)
+    bax.ax.tick_params(labelsize=20)
 
 
     # Configure and plot labels
