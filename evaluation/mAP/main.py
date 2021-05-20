@@ -110,6 +110,12 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
 def processFrame(frame, filename, gt=False):
 
+    if frame is None:
+        f = open(filename, 'w')
+        f.close()
+
+        return
+
     # <class_name> <left> <top> <right> <bottom>
     final_frame = np.zeros( (frame.shape[0], 6))
 
@@ -146,7 +152,12 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 
 
         processFrame(gt_frame, gt_filename, gt=True)
-        processFrame(det_file[key], det_filename)
+
+        try:
+            processFrame(det_file[key], det_filename)
+
+        except:
+            processFrame(None, det_filename)
 
 
     # https://github.com/Cartucho/mAP
@@ -157,8 +168,8 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    list_detectors = ['faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-fine-tune']
-    #list_detectors = ['faster_rcnn', 'faster_rcnn-fine-tune']
+    list_detectors = ['gt', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune']
+    #list_detectors = ['faster_rcnn-test']
     #list_detectors = ['public', 'gt']
 
     # list_sets = ['MOT17', 'MOT20']
@@ -262,7 +273,7 @@ if __name__ == '__main__':
                         average[name].append( float(value) )
                         text_w += value + ','
 
-                    
+
                     # FN
                     # Predicted detections
                     FN = int(average['GT_detections'][-1] - average['TP'][-1])
@@ -279,9 +290,9 @@ if __name__ == '__main__':
             TP            = sum(average['TP'])
             FP            = sum(average['FP'])
             GT_detections = sum(average['GT_detections'])
-            
+
             FN            = GT_detections - TP
-            # Pred_detect   = 
+            # Pred_detect   =
 
             # file.write('| ' + detector + ' | AVERAGE | ' + str(sum(average) / len(average)) + ' | \n')
             file.write(detector + ',%f,%f,%f,%d,%d,%d,%d\n' % (mAP, precision, recall, TP, FP, FN, GT_detections))

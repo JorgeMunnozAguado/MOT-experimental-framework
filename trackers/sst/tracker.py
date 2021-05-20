@@ -660,7 +660,7 @@ class SSTTracker:
                     break
                 verify_iteration += 1
 
-            print(verify_iteration)
+            #print(verify_iteration)
 
             #4) update the tracks
             for i in row_index:

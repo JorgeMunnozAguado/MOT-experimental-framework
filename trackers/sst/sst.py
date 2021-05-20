@@ -2,6 +2,7 @@
 import os
 import cv2
 import sys
+import time
 import numpy as np
 
 sys.path.append('trackers/sst')
@@ -36,7 +37,7 @@ class sst(Tracker_abs):
         self.save_video = False
         self.show_image = False
         self.log_folder = 'trackers/sst/aux/logs'
-        config['cuda'] = False
+        config['cuda'] = True
 
         if not os.path.exists(self.log_folder):
             os.mkdir(self.log_folder)
@@ -65,15 +66,17 @@ class sst(Tracker_abs):
                 choice_str = TrackerConfig.get_configure_str(c)
                 TrackerConfig.set_configure(c)
                 print('=============================={}.{}=============================='.format(i, choice_str))
-                self.test(c)
+                sequences_time = self.test(c)
                 i += 1
+
+        return sequences_time
 
 
 
     def test(self, choice=None):
 
-
         timer = Timer()
+        sequences_time = {}
 
         for subset in os.listdir(self.img_path):
 
@@ -103,6 +106,9 @@ class sst(Tracker_abs):
             result = list()
             result_str = saved_file_name
             first_run = True
+
+            start = time.time()
+
             for i, item in enumerate(reader):
                 if i > len(reader):
                     break
@@ -159,12 +165,15 @@ class sst(Tracker_abs):
                             [i] + [t.id] + [b[0]*w, b[1]*h, b[2]*w, b[3]*h] + [-1, -1, -1, -1]
                         )
 
-
+            end = time.time()
             # save data
             np.savetxt(saved_file_name, np.array(result).astype(int), fmt='%i')
 
-        print(timer.total_time)
-        print(timer.average_time)
+            sequences_time[subset] = end - start
+
+        #print(timer.total_time)
+        #print(timer.average_time)
+        return sequences_time
 
 
 

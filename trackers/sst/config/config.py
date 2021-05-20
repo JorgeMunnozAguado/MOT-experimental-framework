@@ -14,7 +14,7 @@ config = {
     'base_net_folder': '/home/ssm/ssj/weights/MOT17/vgg16_reducedfc.pth',
     'resume': None,
     'start_iter': 55050,
-    'cuda': False,
+    'cuda': True,
     'batch_size': 8,
     'num_workers': 16,
     'iterations': 85050,
@@ -103,7 +103,7 @@ def init_train_mot17():
     config['max_gap_frame'] = 30
     config['false_constant'] = 10
     config['num_workers'] = 16
-    config['cuda'] = False
+    config['cuda'] = True
     config['max_object'] = 80
     config['min_visibility'] = 0.3
 

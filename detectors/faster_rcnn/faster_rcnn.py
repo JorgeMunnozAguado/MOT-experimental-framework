@@ -16,12 +16,11 @@ class faster_rcnn(Detector):
 
 
         # Load model (pretrained)
-        self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
+        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True)
         #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0, rpn_score_thresh=0, box_nms_thresh=0)
         #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.5, rpn_score_thresh=0.5)
         #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.9, rpn_score_thresh=0.9, box_nms_thresh=0.9)
-
-        #self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.09, box_nms_thresh=0.35)
+        self.model = torchvision.models.detection.fasterrcnn_resnet50_fpn(pretrained=True, box_score_thresh=0.99)
 
         if trained: self.model = Detector.load_checkpoint(None, self.model, 'detectors/faster_rcnn/checkpoints/faster_rcnn.pkl')
 
