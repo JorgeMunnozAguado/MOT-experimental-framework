@@ -121,6 +121,7 @@ def run(sequence_dir, det_dir, checkpoint, output_file,
         # Load image and generate detections.
         print("Processing frame %05d" % frame_idx)
         frame_path = seq_info['image_filenames'][int(frame_idx)]
+        detections = detections[:, [0, 2, 3, 4, 5, 6, 7, 8]]
         detections = create_detections(detections, frame_idx)
 
         # Update tracker.
@@ -158,4 +159,3 @@ def run(sequence_dir, det_dir, checkpoint, output_file,
             row[0], row[1], row[2], row[3], row[4], row[5]), file=f)
 
     return sum(runtime) / len(runtime) * 1000
-

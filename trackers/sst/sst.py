@@ -167,7 +167,7 @@ class sst(Tracker_abs):
 
             end = time.time()
             # save data
-            np.savetxt(saved_file_name, np.array(result).astype(int), fmt='%i')
+            np.savetxt(saved_file_name, np.array(result).astype(int), fmt='%i', delimiter=',')
 
             sequences_time[subset] = end - start
 
