@@ -7,14 +7,36 @@ from torch.autograd import Variable
 
 
 class Detector(ABC):
+    '''
+    Abstract class for detectors.
+
+    Includes functions for training and inference.
+    '''
 
     def __init__(self, name, batch_size):
+        '''
+        Create a detector object.
+
+        inputs:
+            - name : detector name.
+            - batch_size : batch size of the data.
+        '''
 
         self.name = name
         self.batch_size = batch_size
 
 
     def detector_name(self, extension=None):
+        '''
+        Returns the name of the detector. Add an extension if
+        required.
+
+        inputs:
+            - extension: (None), extension over the original name.
+
+        outputs:
+            - Name.
+        '''
 
         if extension: return self.name + '-' + extension
 
@@ -23,11 +45,44 @@ class Detector(ABC):
 
     @abstractmethod
     def eval_set(self, dataloader, loader, device, verbose=0):
+        '''
+        (ABSTRACT METHOD)
+
+        Detect object for a sequence of images (video) and save
+        them in a detection file.
+
+        inputs:
+            - dataloader : Object to load data.
+            - loader : Loader used to save the detections in file.
+            - device : You can select the pytorch device where
+                       to perform inference.
+            - verbose : (0) Will print relevant information if (> 1).
+
+        outputs:
+            - (None)
+        '''
+
         pass
 
 
 
     def train_model(self, data, epochs, device='cpu'):
+        '''
+        (NEEDS TO BE IMPLEMENTED IN SONS CLASS)
+
+        Function to train the model. Will call some already
+        implemented methods.
+
+        inputs:
+            - data : Data Loader used for training.
+            - epochs : Number of epchs for training.
+            - device : ('cpu') You can select the pytorch device
+                               where to perform training.
+
+        outputs:
+            - (None)
+        '''
+
         pass
 
 
@@ -104,6 +159,20 @@ class Detector(ABC):
 
     @staticmethod
     def save_checkpoint(optimizer, model, epoch, filename):
+        '''
+        (STATIC METHOD)
+
+        Save model checkpoint.
+
+        inputs:
+            - optimizer : pytorch optimizer.
+            - model : pytorch model.
+            - epoch : actual epoch.
+            - filename : name and path of the check-point file.
+
+        outputs:
+            - (None)
+        '''
 
         checkpoint_dict = {
             'optimizer': optimizer.state_dict(),
@@ -116,6 +185,19 @@ class Detector(ABC):
 
     @staticmethod
     def load_checkpoint(optimizer, model, filename):
+        '''
+        (STATIC METHOD)
+
+        Load a model from a checkpoint.
+
+        inputs:
+            - optimizer : pytorch optimizer.
+            - model : pytorch model.
+            - filename : name and path of the check-point file.
+
+        outputs:
+            - model with the weights loaded.
+        '''
 
         # checkpoint_dict = torch.load(filename)
         checkpoint_dict = torch.load(filename, map_location=torch.device('cpu'))

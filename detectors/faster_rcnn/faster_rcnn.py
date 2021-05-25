@@ -9,6 +9,12 @@ from Detector import Detector
 
 
 class faster_rcnn(Detector):
+    '''
+    Faster R-CNN object detection implementation.
+
+    Uses the Pytorch pretrained model.
+    Also able for fine tunning.
+    '''
 
     def __init__(self, batch_size, trained=False):
 
@@ -32,7 +38,19 @@ class faster_rcnn(Detector):
 
 
     def eval_set(self, dataset, loader, device, verbose=0):
-        '''Run evaluation over loaded data.
+        '''
+        Detect object for a sequence of images (video) and save
+        them in a detection file.
+
+        inputs:
+            - dataloader : Object to load data.
+            - loader : Loader used to save the detections in file.
+            - device : You can select the pytorch device where
+                       to perform inference.
+            - verbose : (0) Will print relevant information if (> 1).
+
+        outputs:
+            - (None)
         '''
 
         dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
@@ -54,7 +72,19 @@ class faster_rcnn(Detector):
 
 
     def train_model(self, dataloader, epochs, device='cpu'):
+        '''
+        Function to train the model. Will call some already
+        implemented methods.
 
+        inputs:
+            - data : Data Loader used for training.
+            - epochs : Number of epchs for training.
+            - device : ('cpu') You can select the pytorch device
+                               where to perform training.
+
+        outputs:
+            - (None)
+        '''
 
         # print(self.model.backbone.parameters())
 
@@ -67,11 +97,6 @@ class faster_rcnn(Detector):
         # self.model.roi_heads
 
         criterion = nn.BCELoss()
-        #optimizer = optim.Adam(self.model.parameters(), lr=0.003, weight_decay=0.0018)
-        #optimizer = optim.Adam(self.model.parameters(), lr=0.025, weight_decay=0.0018)
-        #optimizer = optim.Adam(self.model.parameters(), lr=0.0055, weight_decay=0.0018)
-        #optimizer = optim.Adam(self.model.parameters(), lr=0.0045, weight_decay=0.0025)
-
         optimizer = optim.SGD(self.model.parameters(), lr=0.005, momentum=0.9, weight_decay=0.0005)
 
 
