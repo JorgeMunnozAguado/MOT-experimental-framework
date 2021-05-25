@@ -7,6 +7,18 @@ from scipy.spatial import distance
 
 
 def correlation_matrix(tb, metrics='all', dist_func=distance.correlation):
+    '''
+    Return a correlation matrix between combinations of detector and
+    tracker. The comparable part is a vector of matrixes.
+
+    Inputs:
+        - tb : pandas DataFrame.
+        - metrics : group name of metrics ('all', 'tracking', 'detection')
+        - dist_func : distance or correlation function.
+
+    Outputs:
+        - correlation matrix.
+    '''
     
     comb = combinations(tb)
     result_m = np.zeros((len(comb), len(comb)))
@@ -39,6 +51,18 @@ def correlation_matrix(tb, metrics='all', dist_func=distance.correlation):
 
 
 def correlation_metrics(tb, metrics):
+    '''
+    Return a correlation matrix between detectors. Function compares
+    metrics with the Pearson product-moment correlation coefficient
+    for each combination of metrics.
+
+    Inputs:
+        - tb : pandas DataFrame.
+        - metrics : list of metrics.
+
+    Outputs:
+        - correlation matrix.
+    '''
 
     result_m = np.zeros((len(metrics), len(metrics)))
 
@@ -51,12 +75,21 @@ def correlation_metrics(tb, metrics):
             v2 = tb[[m2]].values.flatten()
 
             result_m[i, j] = np.corrcoef(v1, v2)[1, 0]
-            # result_m[i, j] = abs(np.corrcoef(v1, v2)[1, 0])
             
     return result_m
 
 
 def combinations(tb):
+    '''
+    Return the possible combinations between detectors and trackers.
+    (existing combinations).
+
+    Inputs:
+        - tb : pandas DataFrame.
+
+    Outputs:
+        - list of possible combinations
+    '''
 
     trck = pd.unique(tb['Tracker'])
     detc = pd.unique(tb['Detector'])
@@ -75,30 +108,84 @@ def combinations(tb):
 
 
 
-def search(tb, tracker, detector):
+def search(tb, tracker, detector=None):
+    '''
+    Seach tuples with an specific tracker and / or a detector.
 
-    return tb.loc[(tb['Tracker'] == tracker) & (tb['Detector'] == detector)]
+    Inputs:
+        - tb : pandas DataFrame.
+        - tracker : name of tracker.
+        - detector : name of the detector.
+
+    Outputs:
+        - Data frame with the required information.
+    '''
+
+    if detector:
+
+        return tb.loc[(tb['Tracker'] == tracker) & (tb['Detector'] == detector)]
+
+
+    return tb.loc[(tb['Tracker'] == tracker)]
 
 
 
 def tracking_metrics(tb):
+    '''
+    Return a Data Frame with only the tracking metrics.
+
+    Inputs:
+        - tb : pandas DataFrame.
+
+    Outputs:
+        - Data Frame with the needed columns.
+    '''
 
     return tb.iloc[:, 11:]
 
 
 def detection_metrics(tb):
+    '''
+    Return a Data Frame with only the detection metrics.
+
+    Inputs:
+        - tb : pandas DataFrame.
+
+    Outputs:
+        - Data Frame with the needed columns.
+    '''
 
     return tb.iloc[:, 4:11]
 
 
 def all_metrics(tb):
+    '''
+    Return a Data Frame with all metrics.
+
+    Inputs:
+        - tb : pandas DataFrame.
+
+    Outputs:
+        - Data Frame with the needed columns.
+    '''
 
     return tb.iloc[:, 4:]
 
 
 
 def plot_matrix(data, labels, plot_values=True, figsize=(12, 12)):
+    '''
+    Plot a matrix.
 
+    Inputs:
+        - data : matrix with the data to plot.
+        - labels : labels to plot (x and y axis must be the same).
+        - plot_values : (Boolean) True: plot values in the figure.
+        - figsize : size of the figure.
+
+    Outputs:
+        - (None)
+    '''
 
     # Create figure.
     fig = plt.figure(figsize=figsize)
