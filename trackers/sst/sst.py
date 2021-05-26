@@ -109,7 +109,7 @@ class sst(Tracker_abs):
 
             start = time.time()
 
-            for i, item in enumerate(reader):
+            for i, item in enumerate(reader, start=1):
                 if i > len(reader):
                     break
 
