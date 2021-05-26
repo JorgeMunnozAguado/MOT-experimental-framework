@@ -69,11 +69,12 @@ You can find detection models in the folder `trackers`. Each model has its own f
 
 The implemented trackers are listed below:
 
-| Tracker Name  | Code                                | Publication Year | Publication                      | Journal |Type   |
-| ------------- |:-----------------------------------:|:----------------:|:--------------------------------:|:-------:| ------ |
+| Tracker Name  | Code                                | Publication Year | Publication                      | Journal         | Type   |
+| ------------- |:-----------------------------------:|:----------------:|:--------------------------------:|:---------------:| ------ |
 | Sort          | https://github.com/abewley/sort     | 2017             | https://arxiv.org/abs/1602.00763 | IEEE Conference | Online |
 | Deep Sort     | https://github.com/nwojke/deep_sort | 2017             | https://arxiv.org/abs/1703.07402 | IEEE Conference | Online |
-| UMA           | https://github.com/yinjunbo/UMA-MOT | 2020             | https://arxiv.org/abs/2003.11291 | CVPR | Online |
+| SST           | https://github.com/shijieS/SST      | 2018             | https://arxiv.org/abs/1703.07402 | Arxiv           | Online |
+| UMA           | https://github.com/yinjunbo/UMA-MOT | 2020             | https://arxiv.org/abs/2003.11291 | CVPR            | Online |
 
 
 Example of running tracking step.
@@ -87,10 +88,11 @@ If needed help, run the script with `-h` flag.
 
 The base dataset is compose of the following datasets. This sets will be automaticly downloaded running the `setup.sh` script.
 
-| Dataset Name       | Code                                 |
-| ------------------ |:------------------------------------:|
-| MOT Challenge 2020 | https://motchallenge.net/data/MOT20/ |
-| MOT Challenge 2017 | https://motchallenge.net/data/MOT17/ |
+| Dataset Name | URL | Download |
+---------------|-----|----------|
+| MOT20 | [MOT Challenge](https://motchallenge.net/data/MOT20/) | https://motchallenge.net/data/MOT20.zip |
+| MOT17 | [MOT Challenge](https://motchallenge.net/data/MOT17/) | https://motchallenge.net/data/MOT17.zip |
+| VisDrone | [VisDrone](http://aiskyeye.com/) | (Create an account) |
 
 
 The folder structure used to store the data is based on MOT Challenge structure. In this repository are two folders where to store data: `dataset` where is loaded the raw data and `outputs` where are stored the outputs of the detector and tracking algorithms. The following sub-sections explore how the data is strutured in those folders.
