@@ -107,6 +107,21 @@ def combinations(tb):
     return combin
 
 
+def select_dataset(tb, dataset_name):
+    '''
+    Return a subset Data Frame with the evaluation outputs
+    from the original Data Frame.
+
+    Inputs:
+        - tb : pandas DataFrame.
+        - dataset_name : Name of the dataset to select.
+
+    Outputs:
+        - Data Frame with the required information.
+    '''
+
+    return tb[(tb['Dataset name'] == dataset_name)]
+
 
 def search(tb, tracker, detector=None):
     '''

@@ -62,7 +62,7 @@ class MotChallenge2DBox(_BaseDataset):
         self.data_is_zipped = self.config['INPUT_AS_ZIP']
         self.do_preproc = self.config['DO_PREPROC']
 
-        self.output_fol = self.config['OUTPUT_FOLDER']
+        self.output_fol = os.path.join(self.config['OUTPUT_FOLDER'], config['BENCHMARK'])
         if self.output_fol is None:
             self.output_fol = self.tracker_fol
 

@@ -81,35 +81,42 @@ if __name__ == '__main__':
 
     path = 'outputs/evaluation/tracking'
 
-    trackers = os.listdir(path)
-
-
     file = open('outputs/evaluation/all_metrics.csv', 'w')
-
-
-
 
     print_list(file, header_names)
 
 
-    for tracker in trackers:
-
-        path_track = os.path.join(path, tracker)
-        detectors = os.listdir(path_track)
-        detectors.sort()
-
-        for detector in detectors:
-
-            # print(tracker, detector)
-
-            path_metrics = os.path.join(path_track, detector)
-
-            header_t, info_t = get_tracking_metrics(path_metrics, 'pedestrian_detailed.csv')
-            header_d, info_d = get_detection_metrics(detector)
+    datasets = os.listdir(path)
 
 
-            for set_name, metrics in info_d.items():
+    for set_name in datasets:
+
+        path_set = os.path.join(path, set_name)
+        trackers = os.listdir(path_set)
+
+        for tracker in trackers:
+
+            path_track = os.path.join(path_set, tracker)
+            detectors = os.listdir(path_track)
+            detectors.sort()
+
+            for detector in detectors:
+
+                path_metrics = os.path.join(path_track, detector)
+
+                header_t, info_t = get_tracking_metrics(path_metrics, 'pedestrian_detailed.csv')
+                header_d, info_d = get_detection_metrics(detector)
 
 
-                seq_metrics = [tracker, detector, info_d[set_name][1], set_name] + info_d[set_name][2:] + info_t[set_name][:]
-                print_list(file, seq_metrics)
+                for subset_name in info_t.keys():
+
+                    if subset_name == 'COMBINED': continue
+
+                        # seq_metrics = [tracker, detector, set_name, subset_name] + ['-1', '-1', '-1', '-1', '-1', '-1', '-1'] + info_t[subset_name][:]
+
+                    # else:
+
+                    seq_metrics = [tracker, detector, set_name, subset_name] + info_d[subset_name][2:] + info_t[subset_name][:]
+
+
+                    print_list(file, seq_metrics)
