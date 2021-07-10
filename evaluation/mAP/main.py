@@ -43,7 +43,7 @@ def readFile(path):
 
 
 
-def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
+def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7], det_pub=False):
 
     out_array = []
 
@@ -51,7 +51,8 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
 
     # If public detections
-    if frame.shape[-1] == 6:
+    if (frame.shape[-1] == 6) or det_pub:
+        # print('public')
 
         for i, _ in enumerate(frame[:, 0]):
 
@@ -108,7 +109,7 @@ def int2class(frame, classes_dict, permited=[1, 2, 3, 4, 5, 6, 7]):
 
 
 
-def processFrame(frame, filename, gt=False):
+def processFrame(frame, filename, gt=False, pub=False):
 
     if frame is None:
         f = open(filename, 'w')
@@ -119,7 +120,10 @@ def processFrame(frame, filename, gt=False):
     # <class_name> <left> <top> <right> <bottom>
     final_frame = np.zeros( (frame.shape[0], 6))
 
-    final_frame = int2class(frame, classes_dict)
+    final_frame = int2class(frame, classes_dict, det_pub=pub)
+
+
+    # print(final_frame.shape)
 
 
     if gt: np.savetxt(filename, final_frame[:, [0, 2, 3, 4, 5]], delimiter=' ', fmt=['%s', '%.0f', '%.0f', '%.0f', '%.0f'])
@@ -132,7 +136,7 @@ def cleanFile(path):
 
 
 
-def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/auxiliar/GT', det_auxiliar='evaluation/mAP/auxiliar/DET'):
+def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/auxiliar/GT', det_auxiliar='evaluation/mAP/auxiliar/DET', pub=False):
 
     # Clean axiliar folder
     cleanFile(gt_auxiliar)
@@ -154,7 +158,7 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
         processFrame(gt_frame, gt_filename, gt=True)
 
         try:
-            processFrame(det_file[key], det_filename)
+            processFrame(det_file[key], det_filename, pub=pub)
 
         except:
             processFrame(None, det_filename)
@@ -168,14 +172,15 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    list_detectors = ['gt', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune']
+    # list_detectors = ['gt', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune']
     #list_detectors = ['faster_rcnn-test']
-    #list_detectors = ['public', 'gt']
+    # list_detectors = ['public']
 
-    # list_sets = ['MOT17', 'MOT20']
-    list_sets = ['MOT17']
+    list_sets = ['MOT17', 'MOT20']
+    # list_sets = ['MOT20']
     # list_not_detectors = ['public', 'efficientdet']
-    list_not_detectors = ['efficientdet']
+    # list_not_detectors = ['efficientdet']
+    list_not_detectors = []
 
     output_file = os.path.join('outputs/evaluation/detection', 'summary.txt')
 
@@ -204,6 +209,9 @@ if __name__ == '__main__':
 
             if detector in list_not_detectors: continue
             if verbose: print('DETECTOR:  ', detector)
+
+
+            pub = True if detector == 'public' else False
 
             # list_sets = os.listdir('dataset')
 
@@ -248,7 +256,7 @@ if __name__ == '__main__':
 
 
 
-                    processSequence(gt_path, det_path, img_path)
+                    processSequence(gt_path, det_path, img_path, pub=pub)
 
 
                     with open('evaluation/mAP/auxiliar.txt', 'r') as f:

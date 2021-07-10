@@ -110,13 +110,13 @@ if __name__ == '__main__':
 
                 for subset_name in info_t.keys():
 
-                    if subset_name == 'COMBINED': continue
+                    if subset_name == 'COMBINED':
 
-                        # seq_metrics = [tracker, detector, set_name, subset_name] + ['-1', '-1', '-1', '-1', '-1', '-1', '-1'] + info_t[subset_name][:]
+                        seq_metrics = [tracker, detector, set_name, subset_name] + ['-1', '-1', '-1', '-1', '-1', '-1', '-1'] + info_t[subset_name][:]
 
-                    # else:
+                    else:
 
-                    seq_metrics = [tracker, detector, set_name, subset_name] + info_d[subset_name][2:] + info_t[subset_name][:]
+                        seq_metrics = [tracker, detector, set_name, subset_name] + info_d[subset_name][2:] + info_t[subset_name][:]
 
 
                     print_list(file, seq_metrics)

@@ -663,7 +663,7 @@ with open(output_files_path + "/output.txt", 'w') as output_file:
                 # save the image with all the objects drawn to it
                 cv2.imwrite(img_cumulative_path, img_cumulative)
 
-        #print(tp)
+        # print(tp)
         # compute precision/recall
         cumsum = 0
         for idx, val in enumerate(fp):
@@ -677,11 +677,11 @@ with open(output_files_path + "/output.txt", 'w') as output_file:
         rec = tp[:]
         for idx, val in enumerate(tp):
             rec[idx] = float(tp[idx]) / gt_counter_per_class[class_name]
-        #print(rec)
+        # print(rec)
         prec = tp[:]
         for idx, val in enumerate(tp):
             prec[idx] = float(tp[idx]) / (fp[idx] + tp[idx])
-        #print(prec)
+        # print(prec)
 
         ap, mrec, mprec = voc_ap(rec[:], prec[:])
         sum_AP += ap
@@ -744,9 +744,32 @@ with open(output_files_path + "/output.txt", 'w') as output_file:
 
         # f.write(str(mAP*100))
         # mrec, mprec
+        # print(tp)
 
         f.write('mAP,precision,recall,TP,FP,GT_detections\n')
+        # print(len(prec), len(rec), len(tp), len(fp))
         f.write('%f,%f,%f,%d,%d,%d\n' % (mAP * 100, prec[-1] * 100, rec[-1] * 100, tp[-1], fp[-1], sum(gt_counter_per_class.values())))
+
+
+        n = 50
+
+        # print(len(tp), sum(gt_counter_per_class.values()))
+        # print('TP', tp[-n:])
+        # print('FP', fp[-n:])
+        # print(tp[-4:], gt_counter_per_class)
+        # print('RECALL =', tp[-1] / sum(gt_counter_per_class.values()), rec[-1])
+        # print('PRECISION =', tp[-1] / (tp[-1] + fp[-1]), prec[-1])
+
+        # print(rec)
+        # print('---------------------------------------------------')
+        # print('---------------------------------------------------')
+        # print('---------------------------------------------------')
+        # print('---------------------------------------------------')
+        # print('---------------------------------------------------')
+        # print('---------------------------------------------------')
+        # print(prec)
+        # print(prec)
+        # print(rec)
 
         # print('mAP', mAP * 100)
         # print('precision', prec[-1] * 100)

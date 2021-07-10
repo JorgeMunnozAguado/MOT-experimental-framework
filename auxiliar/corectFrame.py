@@ -32,13 +32,23 @@ def center2xy(file):
     return file
 
 
+def selectClass(file, label):
+
+    idx = np.where(file[:, 7] == label)[0]
+
+    new_f = file[idx]
+
+    return new_f
+
 
 if __name__ == '__main__':
 
     # detector = 'efficientdet-d7x'
     # detector = 'yolo4'
-    sets = ['MOT17']
-    # sets = ['MOT20']
+    detector = 'faster_rcnn'
+    # sets = ['VisDrone2019-MOT-val']
+    # sets = ['MOT17']
+    sets = ['MOT20']
 
 
     for set_name in sets:
@@ -63,7 +73,8 @@ if __name__ == '__main__':
             # file = frame_number(file)
             # file = change_order(file)
             # file = resize_detections(file)
-            file = center2xy(file)
+            # file = center2xy(file)
+            file = selectClass(file, 1)
 
 
 

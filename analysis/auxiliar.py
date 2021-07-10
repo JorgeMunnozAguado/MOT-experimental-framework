@@ -145,6 +145,22 @@ def search(tb, tracker, detector=None):
 
 
 
+def select_list(tb, trackers, detectors):
+
+    list_tb = []
+
+    for trc in trackers:
+
+        for det in detectors:
+
+            list_tb.append( tb.loc[(tb['Tracker'] == trc) & (tb['Detector'] == det)] )
+
+
+    return pd.concat(list_tb)
+
+
+
+
 def tracking_metrics(tb):
     '''
     Return a Data Frame with only the tracking metrics.
