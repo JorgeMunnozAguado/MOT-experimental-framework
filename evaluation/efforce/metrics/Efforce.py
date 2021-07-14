@@ -57,7 +57,7 @@ class Efforce(ABC):
         idws_c = 0
 
 
-        cost, row, col, matrix = self.cost_matrix(tr[:, 1:], gt[:, 1:])
+        cost, row, col, _ = self.cost_matrix(tr[:, 1:], gt[:, 1:])
 
         # print('------------------------')
 

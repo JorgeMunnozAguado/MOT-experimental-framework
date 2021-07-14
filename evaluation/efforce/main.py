@@ -70,45 +70,9 @@ def load_file(path, type, labels=[1, 2, 3, 4, 5, 6, 7]):
 
 
 
-def run_metrics(gt_file, det_file, track_file, K):
+def run_metrics(metric_obj, gt_file, det_file, track_file, K):
 
-    # print(track_file.keys())
-
-
-    ##########################################
-    # FABIO
-    ##########################################
-
-    # intra_frame_f1(gt_file, det_file, track_file, K)
-
-    # fabio_metric = Fabio()
-
-    # fabio_metric.evaluate(gt_file, det_file, track_file)
-
-
-    ##########################################
-    # JORGE
-    ##########################################
-
-    jorge_metric = Jorge()
-
-    values = jorge_metric.evaluate(gt_file, det_file, track_file)
-
-
-
-
-    ##########################################
-    # JUAN CARLOS
-    ##########################################
-
-    # jc = JC()
-
-    # v = jc.evaluate(gt_file, det_file, track_file)
-
-    # print(v)
-
-
-
+    values = metric_obj.evaluate(gt_file, det_file, track_file)
 
     return values
 
@@ -119,13 +83,13 @@ def pretty_print(content, type, header=None):
 
         for el in header:
 
-            print('%-18.15s' % el, end='')
+            print('%-16.15s' % el, end='')
 
 
     for el in content:
 
-        if   type == 'str': print('%-18.15s' % el, end='')
-        elif type == 'flt': print('%-18.2f' % el, end='')
+        if   type == 'str': print('%-16.15s' % el, end='')
+        elif type == 'flt': print('%-16.2f' % el, end='')
 
     print()
 
@@ -135,22 +99,33 @@ def pretty_print(content, type, header=None):
 if __name__ == '__main__':
 
 
-    # trackers  = ['sort', 'deep_sort', 'uma', 'sst']
-    trackers  = ['sort']
+    trackers  = ['sort', 'deep_sort', 'uma', 'sst']
+    # trackers  = ['sort']
     # trackers  = ['deep_sort']
     # trackers  = ['uma']
     # trackers  = ['sst']
+    # detectors = ['yolo3', 'efficientdet-d7x', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
+    detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3']
-    detectors = ['gt']
+    # detectors = ['faster_rcnn-mod-4']
+    # detectors = ['gt']
     # detectors = ['public']
     datasets  = ['MOT17']
 
 
 
     
-    jorge_metric = Jorge()
-    pretty_print(jorge_metric.names(), 'str', header=['Detector', 'Tracker', 'Sequence'])
+    from metrics.test import Test
+    from metrics.test2 import Test2
+    # metric_obj = Test()
+    metric_obj = Test2()
+    # metric_obj = Jorge()
+    # metric_obj = JC()
+    # metric_obj = Fabio()
+
+
+    pretty_print(metric_obj.names(), 'str', header=['Detector', 'Tracker', 'Sequence'])
     print('-------------------------------------------------------------------------------------------------------------------')
 
 
@@ -190,7 +165,7 @@ if __name__ == '__main__':
 
 
 
-                    values = run_metrics(gt_file, det_file, track_file, K)
+                    values = run_metrics(metric_obj, gt_file, det_file, track_file, K)
 
                     values_avg.append(list(values))
 

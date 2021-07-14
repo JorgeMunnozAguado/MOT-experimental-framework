@@ -11,7 +11,7 @@ class JC(Efforce):
 
     def __init__(self):
 
-        pass
+        super().__init__()
 
 
     def cost_matrix(self, v1, v2):
@@ -29,12 +29,8 @@ class JC(Efforce):
 
 
 
-    def tracking_efforce(self):
-        pass
-
-
-    def detection_efforce(self):
-        pass
+    def names(self):
+        return ['MOT Acc.', 'Intra Frame', 'Inter Frame', 'Intra det.', 'Intra trk.', 'Inter det.', 'Inter trk.']
 
 
     def intra_frame(self):
@@ -44,25 +40,45 @@ class JC(Efforce):
         Ed = np.zeros((self.K))
         Et = np.zeros((self.K))
 
+        V  = np.zeros((self.K))
+        Ud  = np.zeros((self.K))
+        Ut  = np.zeros((self.K))
+        Ad = np.zeros((self.K))
+        At = np.zeros((self.K))
+
+        # print(self.ut.keys())
+        # print('----------------')
+        # print(self.ut.values())
 
         for k in range(self.K):
 
+            # Check values.
+            if not k+1 in self.ut:  self.ut[k+1] = np.zeros((0, 5))
+            if not k+1 in self.ud:  self.ud[k+1] = np.zeros((0, 5))
 
-            Ed[k] = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 1][:, 1:])
-            Et[k] = self.cost_matrix(self.ut[k + 1][:, 1:], self.v[k + 1][:, 1:])
+            # Variables.
+            V[k]  = len(self.v[k + 1])
+            Ud[k] = len(self.ud[k + 1])
+            Ut[k] = len(self.ut[k + 1])
+
+            # Cost of the Hungarian Model
+            Ad[k] = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 1][:, 1:])
+            At[k] = self.cost_matrix(self.ut[k + 1][:, 1:], self.v[k + 1][:, 1:])
+
+            Ed[k] = Ad[k] + abs(Ud[k] - V[k])
+            Et[k] = At[k] + abs(Ut[k] - V[k])
 
 
-        E = sum(abs(Ed - Et))
+            E[k] = abs(Ed[k] - Et[k])
 
 
-        # for k in range(self.K):
+        Sd = sum(Ed) / self.K
+        St = sum(Et) / self.K
 
-        #     print(E, Ed[k])
-
-        S = (1 / self.K) * sum([(1 - ((E / Ed[k]) if Ed[k] != 0 else 0)) for k in range(self.K)])
+        S = (1 / self.K) * sum([(1 - ((E[k] / Ed[k]) if Ed[k] != 0 else 0)) for k in range(self.K)])
 
 
-        return S
+        return S, Sd, St
 
 
     def inter_frame(self):
@@ -72,25 +88,46 @@ class JC(Efforce):
         Ed = np.zeros((self.K))
         Et = np.zeros((self.K))
 
+        V  = np.zeros((self.K))
+        Ud  = np.zeros((self.K))
+        Ut  = np.zeros((self.K))
+        Ad = np.zeros((self.K))
+        At = np.zeros((self.K))
+
+
 
         for k in range(self.K - 1):
 
+            # Variables.
+            V[k]  = len(self.v[k + 1])
+            Ud[k] = len(self.ud[k + 1])
+            Ut[k] = len(self.ut[k + 1])
 
-            Ed[k] = self.cost_matrix(self.ud[k + 1], self.v[k + 2])
-            Et[k] = self.cost_matrix(self.ut[k + 1], self.v[k + 2])
+            # Cost of the Hungarian Model
+            Ad[k] = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 2][:, 1:])
+            At[k] = self.cost_matrix(self.ut[k + 1][:, 1:], self.v[k + 2][:, 1:])
+
+            Ed[k] = Ad[k] + abs(Ud[k] - V[k])
+            Et[k] = At[k] + abs(Ut[k] - V[k])
 
 
-        E = sum(abs(Ed - Et))
+            E[k] = abs(Ed[k] - Et[k])
 
 
-        S = (1 / self.K) * sum([(1 - ((E / Ed[k]) if Ed[k] != 0 else 0)) for k in range(self.K)])
+        Sd = sum(Ed) / (self.K - 1)
+        St = sum(Et) / (self.K - 1)
+
+        S = (1 / (self.K - 1)) * sum([(1 - ((E[k] / Ed[k]) if Ed[k] != 0 else 0)) for k in range(self.K - 1)])
 
 
-        return S
+        return S, Sd, St
 
 
     def join_metrics(self, intra, inter, alfa=0.5):
 
-        return (alfa * intra) + ((1 - alfa) * inter)
+        S_intra, Sd_intra, St_intra = intra
+        S_inter, Sd_inter, St_inter = inter
+
+        return (alfa * S_intra) + ((1 - alfa) * S_inter), S_intra, S_inter, Sd_intra, St_intra, Sd_inter, St_inter
 
 

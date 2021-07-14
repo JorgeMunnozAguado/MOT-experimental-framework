@@ -12,7 +12,7 @@ class Fabio(Efforce):
 
     def __init__(self):
 
-        pass
+        super().__init__()
 
 
     def cost_matrix(self, v1, v2):
@@ -23,15 +23,11 @@ class Fabio(Efforce):
 
         cost = matrix[row, col].sum()
 
-        return cost, len(row)
+        return cost, row, col, len(row)
 
 
-    def tracking_efforce(self):
-        pass
-
-
-    def detection_efforce(self):
-        pass
+    def names(self):
+        return ['Det. Efforce', 'Trk. Efforce', 'Trk. over Det.', 'MOT Acc']
 
 
     def intra_frame(self):
@@ -52,10 +48,14 @@ class Fabio(Efforce):
 
         for k in range(self.K):
 
-            Ad, yd[k] = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 1][:, 1:])
-            At, yt[k] = self.cost_matrix(self.ut[k + 1][:, 1:], self.v[k + 1][:, 1:])
+            # Check values.
+            if not k+1 in self.ut:  self.ut[k+1] = np.zeros((0, 5))
+            if not k+1 in self.ud:  self.ud[k+1] = np.zeros((0, 5))
 
-            e = 10   # ?
+            Ad, _, _, yd[k] = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 1][:, 1:])
+            At, _, _, yt[k] = self.cost_matrix(self.ut[k + 1][:, 1:], self.v[k + 1][:, 1:])
+
+            e = .1   # ?
 
             Ud = len(self.ud[k + 1])
             Ut = len(self.ut[k + 1])
@@ -69,24 +69,30 @@ class Fabio(Efforce):
             E[k] = Ed[k] - Et[k]
 
             # TODO
-            I[k] = 0
-            v[k] = 1
+            I[k], _, _, _ = self.IDSW(self.ut[k + 1], self.v[k + 1])
+            v[k] = V
 
 
+        E_a = sum(E) / self.K
 
         # S = (1 / K) * sum(1 - (E[k] / Ed[k]) + y * (I[k] / v[k]))
         S = (1 / self.K) * sum([(1.0 - (E[k] / Ed[k]) + yt[k] * (I[k] / v[k])) for k in range(self.K)])
-        print(S)
+        # print(S)
+
+        return S, E_a
 
         
 
 
     def inter_frame(self):
-        pass
+        return (0,)
 
 
     def join_metrics(self, intra, inter):
-        pass
+
+        S, E_a = intra
+
+        return (S,)
 
 
 
