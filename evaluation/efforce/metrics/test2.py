@@ -13,6 +13,9 @@ class Test2(Efforce):
 
         super().__init__()
 
+        self.alfa = 0.5
+        self.beta = 0.5
+
 
     def cost_matrix(self, v1, v2):
 
@@ -60,8 +63,8 @@ class Test2(Efforce):
         Nt = np.zeros((self.K))
         N  = np.zeros((self.K))
         Ed = np.zeros((self.K))
-
         Et = np.zeros((self.K))
+        Ef = np.zeros((self.K))
         E  = np.zeros((self.K))
         Y  = np.zeros((self.K))
 
@@ -97,54 +100,53 @@ class Test2(Efforce):
             len_d[k] = len(row_d)
             len_t[k] = len(row_t)
 
-
-            # Detection metric.
-            # if V == 0:  Ed[k] = 0
-            # else:       Ed[k] = (2 - (Ad / V) - (abs(Ud - V) / max(V, Ud))) * 0.5
-            # print(V, Ud)
-
-
-            # IoU correlation
-            # if V[k] == 0:
-            #     Id[k] = 0
-            #     It[k] = 0
-            #     I[k]  = 0
-
-            # else:
-            #     # Id[k] = 1 - (Ad[k] / V[k])
-            #     # It[k] = 1 - (At[k] / V[k])
-            #     Id[k] = 1 - (Ad[k] / len_d[k])
-            #     It[k] = 1 - (At[k] / len_t[k])
-            #     I[k]  = It[k] - Id[k]
-
-
             
 
             if len_d[k] > 0:  Id[k] = 1 - (Ad[k] / len_d[k])
             else:             Id[k] = 0
 
-
             if len_t[k] > 0:  It[k] = 1 - (At[k] / len_t[k])
             else:             It[k] = 0
-
             
             I[k]  = It[k] - Id[k]
 
 
-
-
             # Number comparision
-            Nd[k] = 1 - ((V[k] - len(row_d)) / V[k])
-            Nt[k] = 1 - ((V[k] - len(row_t)) / V[k])
+            Nd[k] = 1 - (abs(Ud[k] - V[k]) / max(V[k], Ud[k]))
+            Nt[k] = 1 - (abs(Ut[k] - V[k]) / max(V[k], Ut[k]))
             N[k]  = Nt[k] - Nd[k]
 
+
+
             # Detection metric
-            Ed[k] = (Id[k] + Nd[k]) * 0.5
+            Ed[k] = (self.alfa * Id[k]) + ((1 - self.alfa) * Nd[k])
+            Et[k] = (self.alfa * It[k]) + ((1 - self.alfa) * Nt[k])
+            Y[k]  = Et[k] - Ed[k]
             # Ed[k] = Id[k] * 0.75 + Nd[k] * 0.25
 
 
 
             # Tracking metric
+            # Ef[k] = 1 - idsw[k] / V[k]
+
+            if len_t[k] > 0:
+                Ef[k] = (1 - idsw[k] / len_t[k]) * 0.5
+                Ef[k] +=  (len_t[k] / V[k]) * 0.5
+
+            elif V[k] == 0:
+                Ef[k] = 1
+            else:
+                Ef[k] = 0
+
+            # -> GT objects: V
+            # -> Track objects: Ut
+
+
+
+
+            # E[k] = self.beta * Ef[k] + (1 - self.beta) * Et[k]
+            # E[k] = self.beta * Ef[k] + (1 - self.beta) * Y[k]
+            E[k] = Ef[k] + Y[k]
             # Y[k] = (Ed[k] - It[k]) + N[k]
 
 
@@ -152,14 +154,15 @@ class Test2(Efforce):
             # Y[k] = It[k] - Id[k]
 
 
-            Y[k] = (N[k] + I[k]) * 0.5
+            # Y[k] = (N[k] + I[k]) * 0.5
 
 
-            E[k] = (1 - idsw[k] / V[k]) * 0.75 + (At[k] / V[k]) * 0.25
+            # E[k] = (1 - idsw[k] / V[k]) * 0.75 + (At[k] / V[k]) * 0.25
+            # E[k] = (1 - idsw[k] / V[k]) * 0.5 + It[k] * 0.25 + Nt[k] * 0.25
             # E[k] = (V[k] - idsw[k]) / V[k]
-            E[k] = (E[k] + Nt[k]) * 0.5
+            # E[k] = (E[k] + Nt[k]) * 0.5
             # Et[k] = ((E[k] + Nt[k]) * 0.5) - Y[k]
-            Et[k] = E[k] + Y[k]
+            # Et[k] = E[k] + Y[k]
 
 
 
@@ -189,6 +192,7 @@ class Test2(Efforce):
         
         Sd = sum(Ed) / self.K
         St = sum(Et) / self.K
+        Sf = sum(Ef) / self.K
         S  = sum(E) / self.K
 
         Y_a  = sum(Y) / self.K
@@ -209,37 +213,56 @@ class Test2(Efforce):
         idsw_a = sum(At) / self.K
 
 
-        # import matplotlib.pyplot as plt
+        import matplotlib.pyplot as plt
+
+        # Detection compare
+        plt.plot(Ed,  label='Ed (Detection Efforce BBoxes)')
+        plt.plot(Et,  label='Et (Tracking Efforce BBoxes)')
+        plt.plot(Y,  label='Y (Efforce Difference)')
+
+
+        # Detection data
         # plt.plot(Ed,  label='Ed (Detection Efforce)')
         # plt.plot(Id,  label='Id (Min. IoU)')
         # plt.plot(Nd,  label='Nd (Diff. Detection numb.)')
-        # # plt.plot(Ud,  label='Ud')
+
+        # Detection detail
+        # # plt.plot(Nd * 10,  label='Nd (Diff. Detection numb.) x10')        
+        # plt.plot(Ud,  label='Ud')
         # # plt.plot(V,  label='V')
+
+        # Tracking
+        # plt.plot(Nt,  label='Nt')
+        # # plt.plot(It,  label='It')
+        # # plt.plot(idsw,  label='IDSW')
+
+        # # plt.plot(Nt * 10,  label='Nt (Diff. Detection numb.) x10')        
+        # plt.plot(Ut,  label='Ut')
+        # plt.plot(V,  label='V')
+        # # plt.plot(idsw,  label='IDSW')
+
 
         # # plt.plot(Et,  label='Et')
         # # plt.plot(E,  label='E')
 
         # # plt.plot(Nd,  label='Nd')
-        # # plt.plot(Nt,  label='Nt')
         # # plt.plot(Id,  label='Id')
         # # plt.plot(It,  label='It')
         # # plt.plot(Y,  label='Y')
         # # plt.plot(V,  label='V')
-        # plt.ylabel('some numbers')
-        # plt.legend()
-        # plt.show()
-
-        # # print(Id_a, It_a, Y_a)
-
-        # print(asdf)
 
 
-        # print('det    track  TOT    err(track)')
-        # print('%.2f,  %.2f,  %.2f,  %.2f' % (Sd, St, S, Ya))
+        plt.ylabel('Score')
+        plt.xlabel('Frame number')
+        plt.title('faster_rcnn / sort detection performance')
+        plt.legend()
+        plt.show()
+
+        print(asdf)
 
 
-        # return Sd, St, Y_a, S, idsw_a, V_a, At_a
-        return Sd, St, Y_a, S
+        # return Sd, St, Y_a, S, idsw_a, It_a, Nt_a
+        return Sd, St, Y_a, S, Sf
 
 
 

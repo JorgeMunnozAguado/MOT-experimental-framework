@@ -100,17 +100,20 @@ if __name__ == '__main__':
 
 
     trackers  = ['sort', 'deep_sort', 'uma', 'sst']
-    # trackers  = ['sort']
+    trackers  = ['sort']
     # trackers  = ['deep_sort']
     # trackers  = ['uma']
     # trackers  = ['sst']
     # detectors = ['yolo3', 'efficientdet-d7x', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
-    detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
+    detectors = ['yolo3', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3']
+    detectors = ['faster_rcnn']
+    # detectors = ['faster_rcnn-mod-2']
     # detectors = ['faster_rcnn-mod-4']
     # detectors = ['gt']
     # detectors = ['public']
+    # detectors = ['faster_rcnn-fine-tune']
     datasets  = ['MOT17']
 
 
