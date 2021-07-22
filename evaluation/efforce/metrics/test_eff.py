@@ -8,7 +8,7 @@ from scipy.optimize import linear_sum_assignment
 from metrics.Efforce import Efforce
 
 
-class Test2(Efforce):
+class Test_eff(Efforce):
 
     def __init__(self):
 
@@ -20,26 +20,13 @@ class Test2(Efforce):
 
     def cost_matrix(self, v1, v2):
 
-        # # x, y, w, h -> cx, cy
-        # v1 = self.coord2center(v1)
-        # v2 = self.coord2center(v2)
-
-        # matrix = distance.cdist(v1, v2, 'cosine')
-
-        # row, col = linear_sum_assignment(matrix)
-        
-        # cost = matrix[row, col].sum()
-
-        # return cost
-
-
 
         # x, y, w, h ---> x1, y1, x2, y2
-        v1 = self.coord2corner(v1)
-        v2 = self.coord2corner(v2)
+        v1m = self.coord2corner(v1)
+        v2m = self.coord2corner(v2)
 
         # Cost matrix based on IoU
-        matrix = self.iou(v1, v2)
+        matrix = self.iou(v1m, v2m)
 
 
         row, col = linear_sum_assignment(matrix)
@@ -59,16 +46,13 @@ class Test2(Efforce):
 
         Id = np.zeros((self.K))
         It = np.zeros((self.K))
-        I  = np.zeros((self.K))
         Nd = np.zeros((self.K))
         Nt = np.zeros((self.K))
-        N  = np.zeros((self.K))
         Qd = np.zeros((self.K))
         Qt = np.zeros((self.K))
         Ef = np.zeros((self.K))
         E  = np.zeros((self.K))
         Y  = np.zeros((self.K))
-
 
         V  = np.zeros((self.K))
         Ud = np.zeros((self.K))
@@ -76,48 +60,42 @@ class Test2(Efforce):
         Ad = np.zeros((self.K))
         At = np.zeros((self.K))
 
-        len_d = np.zeros((self.K))
-        len_t = np.zeros((self.K))
-
-        idsw  = np.zeros((self.K))
-
         for k in range(self.K):
 
+            kp = k + 1
+
             # Check values.
-            if not k+1 in self.ut:  self.ut[k+1] = np.zeros((0, 5))
-            if not k+1 in self.ud:  self.ud[k+1] = np.zeros((0, 5))
+            if not kp in self.ut:  self.ut[kp] = np.zeros((0, 5))
+            if not kp in self.ud:  self.ud[kp] = np.zeros((0, 5))
 
             # Variables.
-            V[k]  = len(self.v[k + 1])
-            Ud[k] = len(self.ud[k + 1])
-            Ut[k] = len(self.ut[k + 1])
+            V[k]  = len(self.v[kp])
+            Ud[k] = len(self.ud[kp])
+            Ut[k] = len(self.ut[kp])
 
 
             # Calculate association costs and IDSW
-            Ad[k], row_d, _, _       = self.cost_matrix(self.ud[k + 1][:, 1:], self.v[k + 1][:, 1:])
-            idsw[k], At[k], row_t, _ = self.IDSW(self.ut[k + 1], self.v[k + 1])
+            Ad[k], row_d, _, _       = self.cost_matrix(self.ud[kp][:, 1:], self.v[kp][:, 1:])
+            idsw, At[k], row_t, _ = self.IDSW(self.ut[kp], self.v[kp])
 
 
-            len_d[k] = len(row_d)
-            len_t[k] = len(row_t)
+            len_d = len(row_d)
+            len_t = len(row_t)
 
             
 
-            if len_d[k] > 0:  Id[k] = 1 - (Ad[k] / len_d[k])
+            if len_d > 0:  Id[k] = 1 - (Ad[k] / len_d)
             elif V[k] == 0:   Id[k] = 1
             else:             Id[k] = 0
 
-            if len_t[k] > 0:  It[k] = 1 - (At[k] / len_t[k])
+            if len_t > 0:  It[k] = 1 - (At[k] / len_t)
             elif V[k] == 0:   Id[k] = 1
             else:             It[k] = 0
-            
-            I[k]  = It[k] - Id[k]
 
 
             # Cardinality comparision
             Nd[k] = 1 - (abs(Ud[k] - V[k]) / max(V[k], Ud[k]))
             Nt[k] = 1 - (abs(Ut[k] - V[k]) / max(V[k], Ut[k]))
-            N[k]  = Nt[k] - Nd[k]
 
 
 
@@ -128,16 +106,15 @@ class Test2(Efforce):
 
 
 
-
             # Tracking metric
             # Ef[k] = 1 - idsw[k] / V[k]
 
-            if len_t[k] > 0:
-                Ef[k] = (1 - idsw[k] / len_t[k]) * 0.5
-                # Ef[k] +=  (len_t[k] / V[k]) * 0.5
+            if len_t > 0:
+                Ef[k] = (1 - idsw / len_t) * 0.5
 
             elif V[k] == 0:
                 Ef[k] = 1
+
             else:
                 Ef[k] = 0
 
@@ -159,23 +136,21 @@ class Test2(Efforce):
         Nt_a = sum(Nt) / self.K
 
 
-        V_a  = sum(V) / self.K
-        Ud_a = sum(Ud) / self.K
-        Ut_a = sum(Ut) / self.K
-        Ad_a = sum(Ad) / self.K
-        At_a = sum(At) / self.K
-
-        idsw_a = sum(At) / self.K
+        # V_a  = sum(V) / self.K
+        # Ud_a = sum(Ud) / self.K
+        # Ut_a = sum(Ut) / self.K
+        # Ad_a = sum(Ad) / self.K
+        # At_a = sum(At) / self.K
 
 
 
 
-        self.plotDet(Qd, Qt, Y)
-        self.plotDet_basic(Nd, Nt, Id, It)
+        # self.plotDet(Qd, Qt, Y)
+        # self.plotDet_basic(Nd, Nt, Id, It)
 
 
         # return Sd, St, Y_a, S, idsw_a, It_a, Nt_a
-        return S, Sf, Sd, St, Y_a, Nd, Nt, Id, It
+        return S, Sf, Sd, St, Y_a, Nd_a, Nt_a, Id_a, It_a
 
 
 

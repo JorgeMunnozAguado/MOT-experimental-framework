@@ -2,6 +2,8 @@
 import os
 import numpy as np
 
+from multiprocessing import Pool
+from functools import partial
 
 from metrics.fabio import Fabio
 from metrics.jorge import Jorge
@@ -70,37 +72,84 @@ def load_file(path, type, labels=[1, 2, 3, 4, 5, 6, 7]):
 
 
 
-def run_metrics(metric_obj, gt_file, det_file, track_file, K):
+def run_metrics(metric_obj, gt_file, det_file, track_file, K, detector, tracker):
 
-    values = metric_obj.evaluate(gt_file, det_file, track_file)
+    values = metric_obj.evaluate(gt_file, det_file, track_file, detector, tracker)
 
     return values
 
 
-def pretty_print(content, type, header=None):
+def pretty_print(content, type, header=None, f=None):
 
     if header:
 
         for el in header:
 
             print('%-16.15s' % el, end='')
+            if not f is None:  f.write('%s,' % el)
 
 
-    for el in content:
+    for el in content[:-1]:
 
-        if   type == 'str': print('%-16.15s' % el, end='')
-        elif type == 'flt': print('%-16.2f' % el, end='')
+        if type == 'str':
+            print('%-16.15s' % el, end='')
+            if not f is None:  f.write('%s,' % el)
+
+        elif type == 'flt':
+            print('%-16.2f' % el, end='')
+            if not f is None:  f.write('%.2f,' % el)
+
+
+    # Print file
+    if type == 'str':
+        print('%-16.15s' % content[-1], end='')
+        if not f is None:  f.write('%s' % content[-1])
+
+    elif type == 'flt':
+        print('%-16.2f' % content[-1], end='')
+        if not f is None:  f.write('%.2f' % content[-1])
+
 
     print()
+    if not f is None:  f.write('\n')
 
+
+
+def eval_parallel(s_name, metric_obj, det, tck):
+
+    sets = s_name.split('-')[0]
+
+    gt_path    = os.path.join('dataset', sets, s_name, 'gt/gt.txt')
+    det_path   = os.path.join('outputs/detections', det, sets, s_name, 'det/det.txt')
+    track_path = os.path.join('outputs/tracks', tck, det, sets, s_name + '.txt')
+
+
+    gt_file, K    = load_file(gt_path, 'gt')
+    track_file, _ = load_file(track_path, 'trc')
+
+    if det == 'public':
+        det_file, _ = load_file(det_path, 'public')
+
+    else:
+        det_file, _ = load_file(det_path, 'det')
+
+
+
+    values = run_metrics(metric_obj, gt_file, det_file, track_file, K, det, tck)
+
+    return s_name, values
 
 
 
 if __name__ == '__main__':
 
+    f = open("outputs/evaluation/own.csv", "w")
+
+    num_proc = 16
+
 
     trackers  = ['sort', 'deep_sort', 'uma', 'sst']
-    trackers  = ['sort']
+    # trackers  = ['sort']
     # trackers  = ['deep_sort']
     # trackers  = ['uma']
     # trackers  = ['sst']
@@ -108,12 +157,13 @@ if __name__ == '__main__':
     # detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
     detectors = ['yolo3', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3']
-    detectors = ['faster_rcnn']
+    # detectors = ['faster_rcnn']
     # detectors = ['faster_rcnn-mod-2']
     # detectors = ['faster_rcnn-mod-4']
     # detectors = ['gt']
     # detectors = ['public']
     # detectors = ['faster_rcnn-fine-tune']
+    # datasets  = ['MOT20', 'MOT17']
     datasets  = ['MOT17']
 
 
@@ -121,14 +171,16 @@ if __name__ == '__main__':
     
     from metrics.test import Test
     from metrics.test2 import Test2
+    from metrics.test_eff import Test_eff
     # metric_obj = Test()
-    metric_obj = Test2()
+    # metric_obj = Test2()
+    metric_obj = Test_eff()
     # metric_obj = Jorge()
     # metric_obj = JC()
     # metric_obj = Fabio()
 
 
-    pretty_print(metric_obj.names(), 'str', header=['Detector', 'Tracker', 'Sequence'])
+    pretty_print(metric_obj.names(), 'str', header=['Detector', 'Tracker', 'Sequence'], f=f)
     print('-------------------------------------------------------------------------------------------------------------------')
 
 
@@ -138,46 +190,31 @@ if __name__ == '__main__':
 
         for det in detectors:
 
+            subsets = []
+
             for sets in datasets:
 
+                subsets += os.listdir(os.path.join('dataset', sets))
 
-                # subsets = ['MOT17-02']
-                subsets = ['MOT17-05']
-
-                for s_name in subsets:
+            # subsets = ['MOT17-05']
 
 
-                    gt_path    = os.path.join('dataset', sets, s_name, 'gt/gt.txt')
-                    det_path   = os.path.join('outputs/detections', det, sets, s_name, 'det/det.txt')
-                    track_path = os.path.join('outputs/tracks', tck, det, sets, s_name + '.txt')
+            # Parallel pool
+            pool = Pool(num_proc)                
+
+            func_charged = partial(eval_parallel, metric_obj=metric_obj, det=det, tck=tck)
+
+            out = zip(pool.map(func_charged, subsets))
+
+            for (values,) in out:
+
+                s_name = values[0]
+                values = values[1]
+
+                pretty_print(values, 'flt', header=[det, tck, s_name], f=f)
 
 
-                    # print(gt_path)
-                    # print(det_path)
-                    # print(track_path)
-
-
-                    gt_file, K    = load_file(gt_path, 'gt')
-                    track_file, _ = load_file(track_path, 'trc')
-
-                    if det == 'public':
-                        det_file, _ = load_file(det_path, 'public')
-
-                    else:
-                        det_file, _ = load_file(det_path, 'det')
-
-
-
-                    values = run_metrics(metric_obj, gt_file, det_file, track_file, K)
-
-                    values_avg.append(list(values))
-
-                    pretty_print(values, 'flt', header=[det, tck, s_name])
-
-
-        values_avg = np.asarray(values_avg)
-
-        values_avg = np.sum(values_avg, axis=0) / len(detectors)
-
-        pretty_print(values_avg, 'flt', header=['AVG', tck, 'AVG'])
         print('-------------------------------------------------------------------------------------------------------------------')
+
+
+    f.close()

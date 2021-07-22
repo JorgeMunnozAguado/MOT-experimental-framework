@@ -12,13 +12,16 @@ class Efforce(ABC):
         self.traces  = {}
 
 
-    def evaluate(self, v, ud, ut):
+    def evaluate(self, v, ud, ut, detector, tracker):
 
         self.v  = v
         self.ud = ud
         self.ut = ut
         
         self.K  = len(v)
+
+        self.detector = detector
+        self.tracker  = tracker
 
 
         intra = self.intra_frame()
