@@ -17,6 +17,8 @@ class Test_eff(Efforce):
         self.alfa = 0.5
         self.beta = 0.5
 
+        self.e = 0.0000001
+
 
     def cost_matrix(self, v1, v2):
 
@@ -44,21 +46,29 @@ class Test_eff(Efforce):
 
     def intra_frame(self):
 
+        # Association scores
         Id = np.zeros((self.K))
         It = np.zeros((self.K))
-        Nd = np.zeros((self.K))
-        Nt = np.zeros((self.K))
-        Qd = np.zeros((self.K))
-        Qt = np.zeros((self.K))
-        Ef = np.zeros((self.K))
-        E  = np.zeros((self.K))
-        Y  = np.zeros((self.K))
-
-        V  = np.zeros((self.K))
-        Ud = np.zeros((self.K))
-        Ut = np.zeros((self.K))
         Ad = np.zeros((self.K))
         At = np.zeros((self.K))
+
+        # Cardinality scores
+        Nd = np.zeros((self.K))
+        Nt = np.zeros((self.K))
+        Ud = np.zeros((self.K))
+        Ut = np.zeros((self.K))
+        Ld = np.zeros((self.K))
+        Lt = np.zeros((self.K))
+        V  = np.zeros((self.K))
+
+        # Final scores
+        Qd = np.zeros((self.K))
+        Qt = np.zeros((self.K))
+        Y  = np.zeros((self.K))
+
+        Eintra = np.zeros((self.K))
+
+
 
         for k in range(self.K):
 
@@ -68,95 +78,108 @@ class Test_eff(Efforce):
             if not kp in self.ut:  self.ut[kp] = np.zeros((0, 5))
             if not kp in self.ud:  self.ud[kp] = np.zeros((0, 5))
 
-            # Variables.
+
+            # Calculate association costs and IDSW
+            Ad[k], row_d, _, _    = self.cost_matrix(self.ud[kp][:, 1:], self.v[kp][:, 1:])
+            At[k], row_t, _, _    = self.cost_matrix(self.ut[kp][:, 1:], self.v[kp][:, 1:])
+
+
+            # Cardinaliry variables
             V[k]  = len(self.v[kp])
             Ud[k] = len(self.ud[kp])
             Ut[k] = len(self.ut[kp])
-
-
-            # Calculate association costs and IDSW
-            Ad[k], row_d, _, _       = self.cost_matrix(self.ud[kp][:, 1:], self.v[kp][:, 1:])
-            idsw, At[k], row_t, _ = self.IDSW(self.ut[kp], self.v[kp])
-
-
-            len_d = len(row_d)
-            len_t = len(row_t)
-
+            Ld[k] = len(row_d)
+            Lt[k] = len(row_t)
             
-
-            if len_d > 0:  Id[k] = 1 - (Ad[k] / len_d)
-            elif V[k] == 0:   Id[k] = 1
-            else:             Id[k] = 0
-
-            if len_t > 0:  It[k] = 1 - (At[k] / len_t)
-            elif V[k] == 0:   Id[k] = 1
-            else:             It[k] = 0
-
+            # Association scores
+            Id[k] = 1 - (Ad[k] / (Ld[k] + self.e))
+            It[k] = 1 - (At[k] / (Lt[k] + self.e))
 
             # Cardinality comparision
             Nd[k] = 1 - (abs(Ud[k] - V[k]) / max(V[k], Ud[k]))
             Nt[k] = 1 - (abs(Ut[k] - V[k]) / max(V[k], Ut[k]))
 
-
-
             # Quality of bounding boxes metric
             Qd[k] = (self.alfa * Id[k]) + ((1 - self.alfa) * Nd[k])
-            Qt[k] = (self.alfa * It[k]) + ((1 - self.alfa) * Nt[k])
+            Qt[k] = (self.beta * It[k]) + ((1 - self.beta) * Nt[k])
             Y[k]  = Qt[k] - Qd[k]
 
 
-
-            # Tracking metric
-            # Ef[k] = 1 - idsw[k] / V[k]
-
-            if len_t > 0:
-                Ef[k] = (1 - idsw / len_t) * 0.5
-
-            elif V[k] == 0:
-                Ef[k] = 1
-
-            else:
-                Ef[k] = 0
-
-            E[k] = Ef[k] + Y[k]
+            Eintra[k] = Qd[k] + Y[k]
             
 
+        # Association scores
+        Id = sum(Id) / self.K
+        It = sum(It) / self.K
+        Ad = sum(Ad) / self.K
+        At = sum(At) / self.K
 
+        # Cardinality scores
+        Nd = sum(Nd) / self.K
+        Nt = sum(Nt) / self.K
+        Ud = sum(Ud) / self.K
+        Ut = sum(Ut) / self.K
+        Ld = sum(Ld) / self.K
+        Lt = sum(Lt) / self.K
+        V  = sum(V) / self.K
         
-        Sd = sum(Qd) / self.K
-        St = sum(Qt) / self.K
-        Sf = sum(Ef) / self.K
-        S  = sum(E) / self.K
+        # Final scores
+        Qd = sum(Qd) / self.K
+        Qt = sum(Qt) / self.K
+        Y  = sum(Y) / self.K
 
-        Y_a  = sum(Y) / self.K
-
-        Id_a = sum(Id) / self.K
-        It_a = sum(It) / self.K
-        Nd_a = sum(Nd) / self.K
-        Nt_a = sum(Nt) / self.K
-
-
-        # V_a  = sum(V) / self.K
-        # Ud_a = sum(Ud) / self.K
-        # Ut_a = sum(Ut) / self.K
-        # Ad_a = sum(Ad) / self.K
-        # At_a = sum(At) / self.K
-
-
+        Eintra  = sum(Eintra) / self.K
 
 
         # self.plotDet(Qd, Qt, Y)
         # self.plotDet_basic(Nd, Nt, Id, It)
 
 
-        # return Sd, St, Y_a, S, idsw_a, It_a, Nt_a
-        return S, Sf, Sd, St, Y_a, Nd_a, Nt_a, Id_a, It_a
+        return Eintra, Qd, Qt, Y, Nd, Nt, Id, It
 
 
 
 
     def inter_frame(self):
+
+
+        gt_ids = self.gt_ids_counter()
+        self.prev_traces = np.nan * np.zeros(len(gt_ids))
+
+        for k in range(self.K):
+
+            kp = k + 1
+
+            idsw, _, row_t, _ = self.IDSW(self.ut[kp], self.v[kp])
+
+
+        print('out/')
+
+
         return None
+
+
+    def gt_ids_counter(self):
+
+        list_ids = []
+
+        for k in range(self.K):
+
+            k_list = self.v[k + 1]
+
+            list_ids = np.union1d(list_ids, k_list)
+
+        return list_ids
+
+
+
+
+    def calc_score_trace(self):
+
+        for v in self.traces_id:
+            pass
+
+
 
     def join_metrics(self, intra, inter):
 

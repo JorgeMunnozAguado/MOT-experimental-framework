@@ -57,35 +57,20 @@ class Efforce(ABC):
 
     def IDSW(self, tr, gt):
 
-        idws_c = 0
-
-
         cost, row, col, _ = self.cost_matrix(tr[:, 1:], gt[:, 1:])
 
-        # print('------------------------')
+        matched_gt_ids      = gt[col, 0].astype(int)
+        matched_tracker_ids = tr[row, 0].astype(int)
 
-        for r, c in zip(row, col):
+        prev_matched_tracker_ids = self.prev_traces[matched_gt_ids]
 
-            # print(r, c)
-            if tr[r, 0] not in self.traces:
+        is_idsw = (np.logical_not(np.isnan(prev_matched_tracker_ids))) & (
+                  np.not_equal(matched_tracker_ids, prev_matched_tracker_ids))
 
-                self.traces[tr[r, 0]] = gt[c, 0]
+        self.prev_traces[matched_gt_ids] = matched_tracker_ids
 
-            elif self.traces[tr[r, 0]] != gt[c, 0]:
 
-                # print('ER ', tr[r, 0], gt[c, 0], self.traces[tr[r, 0]])
-                self.traces[tr[r, 0]] = gt[c, 0]
-
-                idws_c += 1
-
-            
-
-        # self.prev_gt = gt.copy()
-        # self.prev_tr = tr.copy()
-
-        # print(idws_c)
-
-        return idws_c, cost, row, col
+        return np.sum(is_idsw), cost, row, col
 
 
 
