@@ -70,6 +70,9 @@ class Efforce(ABC):
         self.prev_traces[matched_gt_ids] = matched_tracker_ids
 
 
+        # print('->', len(gt), len(col), ':', len(col) / len(gt))
+
+
         return np.sum(is_idsw), cost, row, col
 
 

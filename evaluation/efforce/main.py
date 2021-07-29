@@ -115,7 +115,8 @@ def pretty_print(content, type, header=None, f=None):
 
 
 
-def eval_parallel(s_name, metric_obj, det, tck):
+# def eval_parallel(s_name, metric_obj, det, tck):
+def eval_parallel(det, metric_obj, s_name, tck):
 
     sets = s_name.split('-')[0]
 
@@ -137,15 +138,17 @@ def eval_parallel(s_name, metric_obj, det, tck):
 
     values = run_metrics(metric_obj, gt_file, det_file, track_file, K, det, tck)
 
-    return s_name, values
+    return det, values
 
 
 
 if __name__ == '__main__':
 
     f = open("outputs/evaluation/own.csv", "w")
+    # f = None
 
-    num_proc = 16
+    num_proc = 8
+    # num_proc = 1
 
 
     trackers  = ['sort', 'deep_sort', 'uma', 'sst']
@@ -155,7 +158,8 @@ if __name__ == '__main__':
     # trackers  = ['sst']
     # detectors = ['yolo3', 'efficientdet-d7x', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
-    detectors = ['yolo3', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
+    # detectors = ['yolo3', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
+    detectors = ['public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
     # detectors = ['yolo3']
     # detectors = ['faster_rcnn']
     # detectors = ['faster_rcnn-mod-2']
@@ -169,8 +173,8 @@ if __name__ == '__main__':
 
 
     
-    from metrics.test import Test
-    from metrics.test2 import Test2
+    # from metrics.test import Test
+    # from metrics.test2 import Test2
     from metrics.test_eff import Test_eff
     # metric_obj = Test()
     # metric_obj = Test2()
@@ -188,30 +192,28 @@ if __name__ == '__main__':
 
         values_avg = []
 
-        for det in detectors:
+        # for det in detectors:
+        for sets in datasets:
 
-            subsets = []
-
-            for sets in datasets:
-
-                subsets += os.listdir(os.path.join('dataset', sets))
-
+            subsets = os.listdir(os.path.join('dataset', sets))
             # subsets = ['MOT17-05']
+            # subsets = ['MOT17-11']
 
+            for s_name in subsets:
 
-            # Parallel pool
-            pool = Pool(num_proc)                
+                # Parallel pool
+                pool = Pool(num_proc)                
 
-            func_charged = partial(eval_parallel, metric_obj=metric_obj, det=det, tck=tck)
+                func_charged = partial(eval_parallel, metric_obj=metric_obj, s_name=s_name, tck=tck)
 
-            out = zip(pool.map(func_charged, subsets))
+                out = zip(pool.map(func_charged, detectors))
 
-            for (values,) in out:
+                for (values,) in out:
 
-                s_name = values[0]
-                values = values[1]
+                    det = values[0]
+                    values = values[1]
 
-                pretty_print(values, 'flt', header=[det, tck, s_name], f=f)
+                    pretty_print(values, 'flt', header=[det, tck, s_name], f=f)
 
 
         print('-------------------------------------------------------------------------------------------------------------------')
