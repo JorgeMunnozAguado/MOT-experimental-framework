@@ -147,7 +147,7 @@ if __name__ == '__main__':
     f = open("outputs/evaluation/own.csv", "w")
     # f = None
 
-    num_proc = 8
+    num_proc = 9
     # num_proc = 1
 
 
@@ -167,8 +167,8 @@ if __name__ == '__main__':
     # detectors = ['gt']
     # detectors = ['public']
     # detectors = ['faster_rcnn-fine-tune']
-    # datasets  = ['MOT20', 'MOT17']
-    datasets  = ['MOT17']
+    datasets  = ['MOT20', 'MOT17']
+    # datasets  = ['MOT17']
 
 
 
