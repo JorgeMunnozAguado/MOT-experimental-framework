@@ -7,7 +7,7 @@ import numpy as np
 from matplotlib.colors import to_rgb
 
 # GT, det, track
-COLORS = ['green', 'b', 'r']
+COLORS = ['green', 'blue', 'red']
 
 
 def parseInput():
@@ -125,8 +125,10 @@ class Visualize:
 
         for i, c in enumerate(COLORS):
 
+
             rgb = to_rgb(c)
             rgb = tuple( [rgb[0] * 255, rgb[1] * 255, rgb[2] * 255])
+            # print(i, c, rgb)
 
             list_rgb[i] = rgb
 
@@ -134,6 +136,7 @@ class Visualize:
 
 
         self.list_rgb = list_rgb
+        # print(list_rgb)
         self.max_colors = len(COLORS)
 
 
@@ -147,7 +150,6 @@ class Visualize:
 
 
         try:
-
             img = self.draw_b(img, self.gt_frame[frame]   , self.list_rgb[0], thickness)
             img = self.draw_b(img, self.detec_frame[frame], self.list_rgb[1], thickness)
             img = self.draw_b(img, self.track_frame[frame], self.list_rgb[2], thickness)
@@ -168,8 +170,6 @@ class Visualize:
             if bbox[6] in [9, 10, 11]: continue
 
             x1, y1, x2, y2 = Visualize.fromWHtoX(int(bbox[1]), int(bbox[2]), int(bbox[3]), int(bbox[4]))
-
-            # color = self.list_rgb[ bbox[0] % self.max_colors ]
 
             img = cv2.rectangle(img, (x1, y1), (x2, y2), color, thickness)
             # img = Visualize.write_text(img, 'ID: %d' % (bbox[0]), color, x1, y1)
@@ -247,7 +247,8 @@ if __name__ == '__main__':
 
     if verbose: print('All sets to display:', data)
 
-    data = ['MOT17-05', 'MOT17-09']
+    # data = ['MOT17-05', 'MOT17-09']
+    # data = ['MOT17-09']
 
     # For each set
     for d in data:

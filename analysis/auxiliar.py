@@ -204,7 +204,7 @@ def all_metrics(tb):
 
 
 
-def plot_matrix(data, labels, plot_values=True, figsize=(12, 12)):
+def plot_matrix(data, labels, plot_values=True, figsize=(12, 12), file_name=None):
     '''
     Plot a matrix.
 
@@ -256,5 +256,8 @@ def plot_matrix(data, labels, plot_values=True, figsize=(12, 12)):
                                ha="center", va="center", color=color, fontsize=15)
 
     #ax.set_title("Matrix comparing detection and tracking metrics.")
+
+
+    if file_name: plt.savefig('img/'+file_name, dpi=160)
 
     plt.show()
