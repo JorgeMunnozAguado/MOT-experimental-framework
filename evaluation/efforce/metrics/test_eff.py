@@ -20,6 +20,7 @@ class Test_eff(Efforce):
         self.e = 0.0000001
 
         self.plot = False
+        self.plot = True
 
 
     def cost_matrix(self, v1, v2):
@@ -129,7 +130,8 @@ class Test_eff(Efforce):
 
         if self.plot == True:
             self.plotDet(Qd, Qt, Eintra)
-            self.plotDet_basic(Nd, Nt, Id, It)
+            self.plotDet_basic(Nd, Nt, Id, It, Qd, Qt)
+            self.plotDet_cardinality(Nd, Nt, Ud, Ut, V)
             
 
 
@@ -179,7 +181,7 @@ class Test_eff(Efforce):
         Lt = np.zeros((self.K))
         V  = np.zeros((self.K))
 
-        IDSW = np.zeros((self.K))
+        # IDSW = np.zeros((self.K))
 
         # Final scores
         Y  = np.zeros((self.K))
@@ -232,7 +234,7 @@ class Test_eff(Efforce):
 
         if self.plot == True:
             self.plotInterAss(Id, It, Y)
-            self.plotInterID(Einter, IDSW, C, Y)
+            self.plotInterID(Einter, self.IDSW, C, Y)
 
         # Association scores
         Id = sum(Id) / self.K
@@ -253,10 +255,6 @@ class Test_eff(Efforce):
 
         Einter  = sum(Einter) / self.K
 
-
-
-        # self.plotDet(Qd, Qt, Y)
-        # self.plotDet_basic(Nd, Nt, Id, It)
 
 
         return Einter, Id, It, Y, C, IDSW
@@ -307,9 +305,9 @@ class Test_eff(Efforce):
         plt.figure(figsize=(10, 6))
 
         # Detection compare
-        plt.plot(Qd,  label='Qd (Quality of Bboxes from detector)')
-        plt.plot(Qt,  label='Qt (Quality of Bboxes from tracker)')
-        plt.plot(Eintra,  label='Eintra (Tracking Efforce Intra-frame)')
+        plt.plot(Qd,  label='Qd') # (Quality of Bboxes from detector)
+        plt.plot(Qt,  label='Qt') # (Quality of Bboxes from tracker)
+        plt.plot(Eintra,  label='Eintra') # (Tracking Efforce Intra-frame)
 
 
         plt.ylabel('Score')
@@ -318,20 +316,22 @@ class Test_eff(Efforce):
         plt.legend()
         # plt.show()
 
-        plt.savefig('outputs/figs/Intra_%s_%s.jpg' % (self.detector, self.tracker))
+        plt.savefig('outputs/figs/Intra_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
         plt.clf()
         plt.close()
 
 
-    def plotDet_basic(self, Nd, Nt, Id, It):
+    def plotDet_basic(self, Nd, Nt, Id, It, Qd, Qt):
 
         plt.figure(figsize=(10, 6))
 
         # Detection compare
-        plt.plot(Nd,  label='Nd (Cardinality BBoxes)')
-        plt.plot(Nt,  label='Nt (Cardinality BBoxes)')
-        plt.plot(Id,  label='Id (Overlap with BBoxes)')
-        plt.plot(It,  label='It (Overlap with BBoxes)')
+        plt.plot(Nd,  label='Nd') # (Cardinality BBoxes)
+        plt.plot(Nt,  label='Nt') # (Cardinality BBoxes)
+        plt.plot(Id,  label='Id') # (Overlap with BBoxes)
+        plt.plot(It,  label='It') # (Overlap with BBoxes)
+        plt.plot(Qd,  label='Qd') # (Quality of Bboxes from detector)
+        plt.plot(Qt,  label='Qt') # (Quality of Bboxes from tracker)
 
 
         plt.ylabel('Score')
@@ -340,7 +340,31 @@ class Test_eff(Efforce):
         plt.legend()
         # plt.show()
 
-        plt.savefig('outputs/figs/Intra_basic_%s_%s.jpg' % (self.detector, self.tracker))
+        plt.savefig('outputs/figs/Intra_basic_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
+        plt.clf()
+        plt.close()
+        # plt.close('all')
+
+
+    def plotDet_cardinality(self, Nd, Nt, Ud, Ut, V):
+
+        plt.figure(figsize=(10, 6))
+
+        # Detection compare
+        plt.plot(Nd,  label='Nd') # (Cardinality BBoxes)
+        plt.plot(Nt,  label='Nt') # (Cardinality BBoxes)
+        plt.plot(Ud,  label='Ud') # (Number of BBoxes by detector)
+        plt.plot(Ut,  label='Ut') # (Number of BBoxes by tracker)
+        plt.plot(V,   label='V') # (Number of ground truth BBoxes)
+
+
+        plt.ylabel('Score')
+        plt.xlabel('Frame number')
+        plt.title('%s / %s performance bounding boxes' % (self.detector, self.tracker))
+        plt.legend()
+        # plt.show()
+
+        plt.savefig('outputs/figs/Intra_cardin_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
         plt.clf()
         plt.close()
         # plt.close('all')
@@ -351,9 +375,9 @@ class Test_eff(Efforce):
         plt.figure(figsize=(10, 6))
 
         # Detection compare
-        plt.plot(Id, label='Id (BBoxes overlap consecutive frames)')
-        plt.plot(It, label='It (BBoxes overlap consecutive frames)')
-        plt.plot(Y,  label='Y (Difference between detection and tracking)')
+        plt.plot(Id, label='Id') # (BBoxes overlap consecutive frames)
+        plt.plot(It, label='It') # (BBoxes overlap consecutive frames)
+        plt.plot(Y,  label='Difference between Id and It  (It - Id)')
 
 
         plt.ylabel('Score')
@@ -362,7 +386,7 @@ class Test_eff(Efforce):
         plt.legend()
         # plt.show()
 
-        plt.savefig('outputs/figs/IntrerAss_%s_%s.jpg' % (self.detector, self.tracker))
+        plt.savefig('outputs/figs/IntrerAss_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
         plt.clf()
         plt.close()
         # plt.close('all')
@@ -373,10 +397,10 @@ class Test_eff(Efforce):
         plt.figure(figsize=(10, 6))
 
         # Detection compare
-        plt.plot(Einter, label='Einter (Tracking Efforce Inter-frame)')
-        plt.plot(IDSW, label='IDSW_score (IDSW score)')
-        plt.plot(C,    label='C (Cardinality metric)')
-        plt.plot(Y,  label='Y (Difference between detection and tracking)')
+        plt.plot(Einter, label='Einter') # (Tracking Efforce Inter-frame)
+        plt.plot(IDSW, label='IDSW_score') # (IDSW score)
+        plt.plot(C,    label='C') # (Cardinality metric)
+        plt.plot(Y,  label='Y') # (Difference between detection and tracking)
 
 
         plt.ylabel('Score')
@@ -385,7 +409,7 @@ class Test_eff(Efforce):
         plt.legend()
         # plt.show()
 
-        plt.savefig('outputs/figs/Inter_%s_%s.jpg' % (self.detector, self.tracker))
+        plt.savefig('outputs/figs/Inter_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
         plt.clf()
         plt.close()
         # plt.close('all')
@@ -396,9 +420,9 @@ class Test_eff(Efforce):
         plt.figure(figsize=(10, 6))
 
         # Detection compare
-        plt.plot(E,  label='E (Tracking Efforce)')
-        plt.plot(Eintra,  label='Eintra (Tracking Efforce Intra-frame)')
-        plt.plot(Einter, label='Einter (Tracking Efforce Inter-frame)')
+        plt.plot(E,  label='E') # (Tracking Efforce)
+        plt.plot(Eintra,  label='Eintra') # (Tracking Efforce Intra-frame)
+        plt.plot(Einter, label='Einter') # (Tracking Efforce Inter-frame)
 
 
         plt.ylabel('Score')
@@ -407,7 +431,7 @@ class Test_eff(Efforce):
         plt.legend()
         # plt.show()
 
-        plt.savefig('outputs/figs/metric_%s_%s.jpg' % (self.detector, self.tracker))
+        plt.savefig('outputs/figs/metric_%s_%s.jpg' % (self.detector, self.tracker), dpi=230)
         plt.clf()
         plt.close()
         # plt.close('all')

@@ -21,11 +21,38 @@ class Tracker_abs(ABC):
 
     @abstractmethod
     def load_data(self, img_path, detections_path, aux_path):
+        '''
+        (STATIC METHOD)
+
+        Load all the data necesary for the tracker, including
+        preprocessing the sequence of video.
+
+        inputs:
+            - img_path : path were images are located.
+            - detections_path : path were detections are located.
+            - aux_path : path were the tracker could save auxiliar elements.
+
+        outputs:
+            - (None)
+        '''
         pass
 
 
     @abstractmethod
     def calculate_tracks(self, img_path, aux_path, track_path, verbose=0):
+        '''
+        (STATIC METHOD)
+
+        Track objects in the sequences.
+
+        inputs:
+            - img_path : path were images are located.
+            - aux_path : path were the tracker could save auxiliar elements.
+            - track_path : path were to store the tracking outputs.
+
+        outputs:
+            - List of times for process each sequence
+        '''
         pass
 
 

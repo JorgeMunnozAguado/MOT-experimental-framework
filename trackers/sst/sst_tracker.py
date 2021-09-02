@@ -138,7 +138,7 @@ class Node:
         self.active = True
 
 class Track:
-    _id_pool = 0
+    _id_pool = 1
 
     def __init__(self):
         self.s = np.zeros((TrackerConfig.max_track_node, TrackerConfig.max_track_node), dtype=np.float) # similarity score

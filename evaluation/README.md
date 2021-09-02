@@ -11,7 +11,7 @@ python evaluation/mAP/main.py
 ```
 
 
-For evaluating the tracker run the following command. This command just evaluate a tracker over one dataset. To run over more trackers tune the flag `--TRACKERS_TO_EVAL`. To run over more datasets, tune the flag `--BENCHMARK`.
+For evaluating the tracker run the following command. This command just evaluate a tracker over one dataset. To run over more trackers tune the flag `--TRACKERS_TO_EVAL`. To run over more datasets, tune the flag `--BENCHMARK`. If the program stops could be because the system is out of memory. We recomend to add more virtual memory or use a machine with more RAM.
 ```
 python evaluation/scripts/run_mot_challenge.py --BENCHMARK MOT17 --USE_PARALLEL True --NUM_PARALLEL_CORES 4 --TRACKERS_TO_EVAL sort
 ```
@@ -22,4 +22,3 @@ To recopile all the scores run the following command. It creates a table with al
 ```
 python evaluation/create_table.py
 ```
-
