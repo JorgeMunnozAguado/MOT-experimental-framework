@@ -22,3 +22,9 @@ To recopile all the scores run the following command. It creates a table with al
 ```
 python evaluation/create_table.py
 ```
+
+
+To evaluate with the propsed metric run:
+```
+python evaluation/efforce/main.py
+```
