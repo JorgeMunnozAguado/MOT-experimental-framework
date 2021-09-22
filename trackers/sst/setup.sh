@@ -2,8 +2,8 @@
 mkdir aux
 
 
-conda create -y -n SST python=3.5
-source activate SST
+conda create -y -n sst python=3.5
+source activate sst
 
 pip install -r requirement.txt
 conda install -y -c pytorch pytorch torchvision cudatoolkit=10.1

@@ -13,7 +13,7 @@ def parse_input():
     parser = argparse.ArgumentParser(description='Detectors demo')
 
     # Select an able detector from list.
-    list_detectors = ['efficientdet-d0', 'efficientdet-d1', 'efficientdet-d2', 'efficientdet-d3', 'efficientdet-d4'
+    list_detectors = ['efficientdet-d0', 'efficientdet-d1', 'efficientdet-d2', 'efficientdet-d3', 'efficientdet-d4',
                       'efficientdet-d5', 'efficientdet-d6', 'efficientdet-d7', 'efficientdet-d7x']
 
     parser.add_argument("--model", help="Name of the model to use.", choices=list_detectors, required=True)

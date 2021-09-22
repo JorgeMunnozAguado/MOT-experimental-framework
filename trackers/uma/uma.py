@@ -1,5 +1,6 @@
 
 import os
+import cv2
 import glob
 import time
 
@@ -80,6 +81,23 @@ class uma(Tracker_abs):
 
                 img_list = os.listdir(os.path.join(sequence_dir, 'img1'))
                 frame_count = int(max(img_list).split('.')[0])
+                max_age = int(CONFIG.PRAM['life_span'] * 30)
+
+
+                img_seq_list = os.listdir(os.path.join(sequence_dir, 'img1'))
+
+                path_img_check = os.path.join(sequence_dir, 'img1', img_seq_list[0])
+                img_check = cv2.imread(path_img_check)
+                width = img_check.shape[1]
+                height = img_check.shape[0]
+                _, extension = os.path.splitext(img_seq_list[0])
+
+                text = '[Sequence]\nname=%s\nimDir=img1\nframeRate=30\nseqLength=%d\nimWidth=%d\nimHeight=%d\nimExt=%s' % (sequence, len(img_seq_list), width, height, extension)
+
+
+                with open(info_filename, "w") as f:
+
+                    f.write(text)
 
             start = time.time()
 

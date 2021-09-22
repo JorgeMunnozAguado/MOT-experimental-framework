@@ -41,14 +41,21 @@ def selectClass(file, label):
     return new_f
 
 
+def setThreshold(file, threshold):
+
+    idx = np.where(file[:, 6] >= threshold)[0]
+
+    new_f = file[idx]
+
+    return new_f
+
+
 if __name__ == '__main__':
 
-    # detector = 'efficientdet-d7x'
-    # detector = 'yolo4'
-    detector = 'faster_rcnn'
-    # sets = ['VisDrone2019-MOT-val']
-    # sets = ['MOT17']
-    sets = ['MOT20']
+    detector = 'efficientdet-d0-mod-2'
+    sets = ['MOT17', 'MOT20', 'VisDrone2019-MOT-val']
+
+    print(detector)
 
 
     for set_name in sets:
@@ -68,15 +75,17 @@ if __name__ == '__main__':
             file = np.loadtxt(path, delimiter=',')
 
 
-
+            #print(file.shape)
 
             # file = frame_number(file)
             # file = change_order(file)
             # file = resize_detections(file)
             # file = center2xy(file)
-            file = selectClass(file, 1)
+            #file = selectClass(file, 1)
+            #file = setThreshold(file, threshold=0.5)
+            file = setThreshold(file, threshold=0.8)
 
-
+            #print(file.shape)
 
 
             np.savetxt(path, file, delimiter=',', fmt=['%d', '%d', '%.0f', '%.0f', '%.0f', '%.0f', '%.4f', '%d', '%d', '%d'])

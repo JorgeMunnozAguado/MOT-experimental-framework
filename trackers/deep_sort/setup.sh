@@ -18,4 +18,4 @@ cd ..
 conda create -y --name deep_sort python=3.6
 source activate deep_sort
 
-pip install numpy opencv-python tensorflow-gpu Keras
+pip install numpy opencv-python tensorflow-gpu Keras scipy
