@@ -125,6 +125,8 @@ class DatasetLoader:
 
     def update(self, frame, boxes, scores, labels, label_permited=[1], preprocess=True):
 
+        #print(boxes.shape, scores.shape, labels.shape)
+
         # Process bounding boxes
         if preprocess:
             boxes = DatasetLoader.processBoxes(boxes)

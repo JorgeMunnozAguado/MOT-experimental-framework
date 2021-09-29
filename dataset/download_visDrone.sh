@@ -8,7 +8,7 @@ python download_visDrone.py
 
 # Unzip
 unzip -qq VisDrone2019-MOT-val.zip
-unzip -qq VisDrone2019-MOT-train.zip
+#unzip -qq VisDrone2019-MOT-train.zip
 
 # Remove Zip files
 rm VisDrone2019-MOT-val.zip
@@ -44,28 +44,28 @@ cd ..
 
 
 
-cd VisDrone2019-MOT-train
+#cd VisDrone2019-MOT-train
 
-for f in sequences/*; do
+#for f in sequences/*; do
 
-	mkdir $f/img1;
-	mv $f/* $f/img1
+#	mkdir $f/img1;
+#	mv $f/* $f/img1
 
-done
+#done
 
 
 
-for f in annotations/*; do
+#for f in annotations/*; do
 
-	name=$(echo "$f" | cut -d"/" -f2 | cut -d'.' -f1)
+#	name=$(echo "$f" | cut -d"/" -f2 | cut -d'.' -f1)
 
-	mkdir sequences/${name}/gt;
-	mv $f sequences/${name}/gt/gt.txt
+#	mkdir sequences/${name}/gt;
+#	mv $f sequences/${name}/gt/gt.txt
 
-done
+#done
 
-rm -r annotations/
-mv sequences/* .
-rm -r sequences/
+#rm -r annotations/
+#mv sequences/* .
+#rm -r sequences/
 
-cd ..
+#cd ..

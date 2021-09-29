@@ -11,3 +11,5 @@ conda install -y -c conda-forge notebook
 
 pip install matplotlib
 pip install scipy
+
+mkdir img

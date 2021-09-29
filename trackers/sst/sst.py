@@ -87,7 +87,6 @@ class sst(Tracker_abs):
 
             # print('start processing '+saved_file_name)
 
-
             # print('*******************************************************')
             # print('*******************************************************')
             # print('*******************************************************')
@@ -118,6 +117,7 @@ class sst(Tracker_abs):
 
                 img = item[0]
                 det = item[1]
+
 
                 if img is None or det is None or len(det)==0:
                     continue

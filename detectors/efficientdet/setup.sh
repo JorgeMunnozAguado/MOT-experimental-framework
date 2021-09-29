@@ -15,6 +15,7 @@ conda create -y --name efficientdet python=3.6
 source activate efficientdet
 
 pip install -r requirements.txt
+pip install tensorflow==2.3
 pip install pycocotools
 conda install -y -c pytorch pytorch torchvision cudatoolkit=10.1
 

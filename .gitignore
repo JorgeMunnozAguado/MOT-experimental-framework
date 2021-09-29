@@ -24,3 +24,4 @@ outputs/
 !dataset/download_visDrone.py
 !dataset/download_visDrone.sh
 !dataset/frame_visDrone.sh
+!dataset/setup.sh
