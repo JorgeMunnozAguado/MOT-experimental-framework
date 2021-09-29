@@ -15,6 +15,7 @@ cd ..
 # Download mor datasets.
 cd dataset
 bash download_visDrone.sh
+bash frame_visDrone.sh
 cd ..
 
 

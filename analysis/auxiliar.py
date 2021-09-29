@@ -261,3 +261,21 @@ def plot_matrix(data, labels, plot_values=True, figsize=(12, 12), file_name=None
     if file_name: plt.savefig('img/'+file_name, dpi=160)
 
     plt.show()
+
+
+
+
+
+def plot_histogram(data, n_bins, title, xlabel="Values", ylabel="Number of Elements", figsize=(20,10), file_name=None):
+
+    fig = plt.figure(figsize=figsize)
+
+    plt.hist(data, bins=n_bins)
+
+    plt.title(title, fontsize=30)
+    plt.xlabel(xlabel, fontsize=20)
+    plt.ylabel(ylabel, fontsize=20)
+
+    if file_name: plt.savefig('img/'+file_name, dpi=160)
+
+    plt.show()

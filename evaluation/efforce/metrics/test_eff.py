@@ -134,6 +134,16 @@ class Test_eff(Efforce):
             self.plotDet_cardinality(Nd, Nt, Ud, Ut, V)
             
 
+        
+
+        Eintra_list = Eintra
+
+        Id_list = Id
+        It_list = It
+        Nd_list = Nd
+        Nt_list = Nt
+        Qd_list = Qd
+        Qt_list = Qt
 
         # Association scores
         Id = sum(Id) / self.K
@@ -156,10 +166,12 @@ class Test_eff(Efforce):
 
         self.IDSW = IDSW
 
-        Eintra  = sum(Eintra) / self.K
+        # self.save_list_file('intra.csv', Eintra)
+
+        Eintra = sum(Eintra) / self.K
 
 
-        return Eintra, Qd, Qt, Nd, Nt, Id, It
+        return Eintra, Qd, Qt, Nd, Nt, Id, It, Eintra_list, Qd_list, Qt_list, Id_list, Nd_list, It_list, Nt_list
 
 
 
@@ -236,6 +248,15 @@ class Test_eff(Efforce):
             self.plotInterAss(Id, It, Y)
             self.plotInterID(Einter, self.IDSW, C, Y)
 
+        
+        Einter_list = Einter
+        Y_list = Y
+        C_list = C
+        IDSW_list = self.IDSW
+
+
+
+
         # Association scores
         Id = sum(Id) / self.K
         It = sum(It) / self.K
@@ -257,7 +278,7 @@ class Test_eff(Efforce):
 
 
 
-        return Einter, Id, It, Y, C, IDSW
+        return Einter, Id, It, Y, C, IDSW, Einter_list, Y_list, C_list, IDSW_list
 
 
 
@@ -287,8 +308,6 @@ class Test_eff(Efforce):
 
     def join_metrics(self, intra, inter):
 
-        # print(tuple(list(intra) + list(inter)))
-
         Eintra = intra[0]
         Einter = inter[0]
 
@@ -296,8 +315,18 @@ class Test_eff(Efforce):
 
         # self.plotMetric(E, Eintra, Einter)
 
-        return tuple([E] + list(intra) + list(inter))
+        return tuple([E] + list(intra[:7]) + list(inter[:6]) + list(intra[7:]) + list(inter[6:]))
 
+
+
+
+
+    #####################################################################
+    #
+    #   Plots
+    #
+    #
+    #####################################################################
 
 
     def plotDet(self, Qd, Qt, Eintra):

@@ -40,7 +40,7 @@ class Visualize:
 
         self.gt_path = os.path.join(data_path, set_data, data, 'gt')
         self.detec_path = os.path.join(out_path, 'detections', detector, set_data, data, 'det')
-        self.track_path = os.path.join(out_path, 'tracks', tracker, detector, set_data, data)
+        # self.track_path = os.path.join(out_path, 'tracks', tracker, detector, set_data, data)
 
         self.imgs_path  = os.path.join(data_path, set_data, data, 'img1')
         self.out_data  = os.path.join(out_path, 'videos', data + '.mp4')
@@ -50,7 +50,7 @@ class Visualize:
 
         self.gt_frame    = self.readFile(self.gt_path + '/gt.txt')
         self.detec_frame = self.readFile(self.detec_path + '/det.txt')
-        self.track_frame = self.readFile(self.track_path + '.txt')
+        # self.track_frame = self.readFile(self.track_path + '.txt')
 
         # self.processTraces()
         self.listColors()
@@ -152,7 +152,8 @@ class Visualize:
         try:
             img = self.draw_b(img, self.gt_frame[frame]   , self.list_rgb[0], thickness)
             img = self.draw_b(img, self.detec_frame[frame], self.list_rgb[1], thickness)
-            img = self.draw_b(img, self.track_frame[frame], self.list_rgb[2], thickness)
+            # img = self.draw_b(img, self.track_frame[frame], self.list_rgb[2], thickness)
+            # img = self.draw_b(img, self.track_frame[frame], self.list_rgb[1], thickness)
 
 
         except:
@@ -243,12 +244,13 @@ if __name__ == '__main__':
     verbose  = args.verbose
 
 
-    data = Visualize.subsets(detector, tracker, set_data, path)
+    # data = Visualize.subsets(detector, tracker, set_data, path)
 
     if verbose: print('All sets to display:', data)
 
     # data = ['MOT17-05', 'MOT17-09']
     # data = ['MOT17-09']
+    data = ['MOT17-02']
 
     # For each set
     for d in data:

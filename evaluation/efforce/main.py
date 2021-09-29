@@ -6,8 +6,8 @@ from multiprocessing import Pool
 from functools import partial
 
 from metrics.fabio import Fabio
-from metrics.jorge import Jorge
 from metrics.jc import JC
+from metrics.test_eff import Test_eff
 
 
 
@@ -114,6 +114,28 @@ def pretty_print(content, type, header=None, f=None):
     if not f is None:  f.write('\n')
 
 
+def set_file_name(path, names):
+
+    files_open = {}
+
+    for n in names:
+
+        files_open[n] = open(os.path.join(path, n), "w")
+
+    return files_open
+
+
+def save_list_file(f, data):
+
+    f.write('%.4f' % data[0])
+
+    for e in data[1:]:
+
+        f.write(', %.4f' % e)
+
+    f.write('\n')
+
+
 
 # def eval_parallel(s_name, metric_obj, det, tck):
 def eval_parallel(det, metric_obj, s_name, tck):
@@ -152,36 +174,18 @@ if __name__ == '__main__':
 
 
     trackers  = ['sort', 'deep_sort', 'uma', 'sst']
-    # trackers  = ['sort']
-    # trackers  = ['deep_sort']
-    # trackers  = ['uma']
-    # trackers  = ['sst']
-    # detectors = ['yolo3', 'efficientdet-d7x', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
-    # detectors = ['yolo3', 'faster_rcnn', 'faster_rcnn-fine-tune', 'gt']
-    # detectors = ['yolo3', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
     detectors = ['public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
-    # detectors = ['yolo3']
-    # detectors = ['faster_rcnn']
-    # detectors = ['faster_rcnn-mod-2']
-    # detectors = ['faster_rcnn-mod-4']
-    # detectors = ['gt']
-    # detectors = ['public']
-    # detectors = ['faster_rcnn-fine-tune']
     datasets  = ['MOT20', 'MOT17']
-    # datasets  = ['MOT17']
-
-
 
     
-    # from metrics.test import Test
-    # from metrics.test2 import Test2
-    from metrics.test_eff import Test_eff
-    # metric_obj = Test()
-    # metric_obj = Test2()
     metric_obj = Test_eff()
-    # metric_obj = Jorge()
     # metric_obj = JC()
     # metric_obj = Fabio()
+
+    files_name_list = ['intra.csv', 'Qd.csv', 'Qt.csv', 'Id.csv', 'Nd.csv', 'It.csv', 'Nt.csv', 'inter.csv', 'Y.csv', 'C.csv', 'IDSW.csv']
+    files_n = len(files_name_list)
+
+    files_open = set_file_name('outputs/evaluation/', files_name_list)
 
 
     pretty_print(metric_obj.names(), 'str', header=['Detector', 'Tracker', 'Sequence'], f=f)
@@ -212,6 +216,14 @@ if __name__ == '__main__':
 
                     det = values[0]
                     values = values[1]
+
+
+                    for i, file_name in enumerate(files_name_list):
+
+                        save_list_file(files_open[file_name], values[(-files_n) + i])
+
+
+                    values = values[:-files_n]
 
                     pretty_print(values, 'flt', header=[det, tck, s_name], f=f)
 

@@ -172,14 +172,9 @@ def processSequence(gt_path, det_path, img_path, gt_auxiliar='evaluation/mAP/aux
 if __name__ == '__main__':
 
     list_detectors = os.listdir('outputs/detections')
-    # list_detectors = ['gt', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune']
-    #list_detectors = ['faster_rcnn-test']
-    # list_detectors = ['public']
+    list_detectors = ['gt', 'public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'keypoint_rcnn', 'mask_rcnn', 'retinanet', 'yolo3', 'yolo4']
 
-    list_sets = ['MOT17', 'MOT20']
-    # list_sets = ['MOT20']
-    # list_not_detectors = ['public', 'efficientdet']
-    # list_not_detectors = ['efficientdet']
+    list_sets = ['MOT17', 'MOT20', 'VisDrone2019-MOT-val']
     list_not_detectors = []
 
     output_file = os.path.join('outputs/evaluation/detection', 'summary.txt')
@@ -240,6 +235,10 @@ if __name__ == '__main__':
 
 
             for set_name in list_sets:
+
+                if not os.path.exists( os.path.join('outputs/detections', detector, set_name)):
+                    print('! WARNING :', detector, set_name, '- do not exist.')
+                    continue
 
                 list_subsets = os.listdir( os.path.join('dataset', set_name) )
                 list_subsets.sort()
