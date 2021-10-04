@@ -279,3 +279,38 @@ def plot_histogram(data, n_bins, title, xlabel="Values", ylabel="Number of Eleme
     if file_name: plt.savefig('img/'+file_name, dpi=160)
 
     plt.show()
+
+
+
+def dots_graph(data, metric_x, metric_y, otype='diff', figsize=(15, 8)):
+    
+    x = []
+    y = []
+    
+    fig = plt.figure(figsize=figsize)
+    
+    for d in data:
+        
+        if otype == 'diff':
+            
+            x.append( abs(d[0][metric_x] - d[1][metric_x]) )
+            y.append( abs(d[0][metric_y] - d[1][metric_y]) )
+        
+        elif otype == 'all':
+            
+            x.append(d[0][metric_x])
+            x.append(d[1][metric_x])
+            y.append(d[0][metric_y])
+            y.append(d[1][metric_y])
+            
+        else:
+            
+            raise Exception('oType incorrect.')
+            
+
+    plt.title('Comparing ' + metric_x + ' and ' + metric_y, fontsize=30)
+    plt.xlabel(metric_x, fontsize=20)
+    plt.ylabel(metric_y, fontsize=20)
+    
+    plt.scatter(x, y)
+    plt.show()

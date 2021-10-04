@@ -61,3 +61,20 @@ Where:
 ```
 
 > If you want to search in only one sequence use `search_seq()`.
+
+
+## Visualize one frame
+
+There are different modes.
+```python
+plotFrame(detector, tracker, dataset_name, sequence_name, frame_number)
+```
+
+- *frame_number*: frame to show with the bounding boxes.
+- *dataset_name*: dataset name. example: `'MOT20'`.
+- *dataset_name*: sequence name, from the selected dataset. example: `'MOT20-02'`.
+
+To print only ground truth bounding boxes and adding detection or tracking boxes:
+
+- *detector*: detectors name. (if `None` it won't print any detections)
+- *tracker*: trackers name. (if `None` it won't print any boxes)
