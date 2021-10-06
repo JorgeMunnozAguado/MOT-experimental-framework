@@ -14,7 +14,7 @@ The repository is divided in folders:
 
 In the following sections we will explore how are organized this folders and how to run experiments.
 
-To setup the environment run `bash setup.sh`. It is recomended to configure the flags in order to get the best performance running the experiments. This script will take 1 hour or more to run.
+To setup the environment run `bash setup.sh`. It is recomended to configure the flags in order to get the best performance running the experiments. This script could take 1 hour to run.
 
 ## Installation & Execution
 
@@ -27,15 +27,20 @@ Run detection step:
 ```
 python detectors/main.py --detector <detector_name>
 ```
+> To run with further configuration check **detectors** folder.
 
 Run tracking step:
 ```
-python trackers/main.py --detector <tracker_name>
+python trackers/main.py --detector <detector_name> --tracker <tracker_name>
 ```
+> To run with further configuration check **trackers** folder.
 
 Evaluating results:
 ```
-python evaluation/Evaluate.py
+python evaluation/mAP/main.py
+python evaluation/scripts/run_mot_challenge.py --BENCHMARK <dataset_name> --USE_PARALLEL True --NUM_PARALLEL_CORES 8 --TRACKERS_TO_EVAL <traker_name>
+python evaluation/efforce/main.py
+python evaluation/create_table.py
 ```
 
 ## Detection models
@@ -145,7 +150,7 @@ outputs/
 ```
 
 
-## Evaluation
+<!-- ## Evaluation
 
 Evaluation module was based on [mot-metrics](https://github.com/cheind/py-motmetrics) repository. We have perform some changes in order to perform evaluation over the predictions perform with all the possible combinatios of detectors and trackers.
 
@@ -156,4 +161,4 @@ To perform the evaluation run:
 ```
 python3 evaluation/Evaluate.py
 ```
-
+-->

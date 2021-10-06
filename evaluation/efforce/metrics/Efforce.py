@@ -1,4 +1,5 @@
 
+import os
 import numpy as np
 
 from abc import ABC, abstractmethod
@@ -10,6 +11,8 @@ class Efforce(ABC):
         self.prev_gt = None
         self.prev_tr = None
         self.traces  = {}
+
+        self.files_open = {}
 
 
     def evaluate(self, v, ud, ut, detector, tracker):
@@ -76,8 +79,8 @@ class Efforce(ABC):
         return np.sum(is_idsw), cost, row, col
 
 
+    
 
-        # print(a)
 
 
     @staticmethod
