@@ -84,9 +84,10 @@ def apply_cond(e1, e2, type_c):
 
 def load_histogram(file, path='../outputs/evaluation'):
 
-    data = np.loadtxt(os.path.join(path, file), delimiter=',')
+    df = pd.read_csv(os.path.join(path, file))
 
-    data = data.flatten()
+    data = df.values.flatten()
+    data = data[np.logical_not(np.isnan(data))]
 
     return data
 
