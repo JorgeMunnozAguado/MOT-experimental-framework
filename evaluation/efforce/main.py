@@ -138,9 +138,9 @@ def save_list_file(f, data):
 
 
 # def eval_parallel(s_name, metric_obj, det, tck):
-def eval_parallel(det, metric_obj, s_name, tck):
+def eval_parallel(det, metric_obj, sets, s_name, tck):
 
-    sets = s_name.split('-')[0]
+    #sets = s_name.split('-')[0]
 
     gt_path    = os.path.join('dataset', sets, s_name, 'gt/gt.txt')
     det_path   = os.path.join('outputs/detections', det, sets, s_name, 'det/det.txt')
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     trackers  = ['sort', 'deep_sort', 'uma', 'sst']
     detectors = ['public', 'faster_rcnn', 'faster_rcnn-mod-1', 'faster_rcnn-mod-2', 'faster_rcnn-mod-3', 'faster_rcnn-mod-4', 'faster_rcnn-fine-tune', 'gt']
-    datasets  = ['MOT20', 'MOT17']
+    datasets  = ['MOT20', 'MOT17', 'VisDrone2019-MOT-val']
 
     
     metric_obj = Test_eff()
@@ -200,6 +200,11 @@ if __name__ == '__main__':
         for sets in datasets:
 
             subsets = os.listdir(os.path.join('dataset', sets))
+
+            detec = detectors.copy()
+            if sets == 'VisDrone2019-MOT-val':
+                detec.remove('faster_rcnn-fine-tune')
+                detec.remove('public')
             # subsets = ['MOT17-05']
             # subsets = ['MOT17-11']
 
@@ -208,9 +213,9 @@ if __name__ == '__main__':
                 # Parallel pool
                 pool = Pool(num_proc)                
 
-                func_charged = partial(eval_parallel, metric_obj=metric_obj, s_name=s_name, tck=tck)
+                func_charged = partial(eval_parallel, metric_obj=metric_obj, sets=sets, s_name=s_name, tck=tck)
 
-                out = zip(pool.map(func_charged, detectors))
+                out = zip(pool.map(func_charged, detec))
 
                 for (values,) in out:
 

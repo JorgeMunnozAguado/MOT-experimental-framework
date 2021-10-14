@@ -153,6 +153,9 @@ class MotChallenge2DBox(_BaseDataset):
         else:
             raise TrackEvalException('List of tracker files and tracker display names do not match.')
 
+
+        final_tracker_list = self.tracker_list.copy()
+
         for tracker in self.tracker_list:
 
             if self.data_is_zipped:
@@ -168,9 +171,11 @@ class MotChallenge2DBox(_BaseDataset):
 
                     if not os.path.isfile(curr_file):
                         print('Tracker file not found: ' + curr_file)
-                        raise TrackEvalException(
-                            'Tracker file not found: ' + tracker + '/' + self.tracker_sub_fol + '/' + os.path.basename(
-                            curr_file))
+                        final_tracker_list.remove(tracker)
+                        break
+
+        self.tracker_list = final_tracker_list
+
 
     def get_display_name(self, tracker):
         return self.tracker_to_disp[tracker]

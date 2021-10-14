@@ -20,7 +20,6 @@ class Test_eff(Efforce):
         self.e = 0.0000001
 
         self.plot = False
-        self.plot = True
 
 
     def cost_matrix(self, v1, v2):
